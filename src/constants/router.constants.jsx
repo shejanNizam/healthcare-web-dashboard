@@ -11,6 +11,7 @@ import Blogs from "../pages/Main/Blogs/Blogs";
 import ContactList from "../pages/Main/ContactList/ContactList";
 import DashboardHome from "../pages/Main/DashboardHome/DashboardHome";
 import International from "../pages/Main/International/International";
+import InternationalApplicantDetails from "../pages/Main/International/InternationalApplicantDetails";
 import JobPost from "../pages/Main/JobPost/JobPost";
 import Notifications from "../pages/Main/Notifications/Notifications";
 import EditMyProfile from "../pages/Profile/EditMyProfile";
@@ -45,6 +46,10 @@ export const dashboardItems = [
     path: "international",
     icon: PiUsersThree,
     element: <International />,
+  },
+  {
+    path: "international/:id",
+    element: <InternationalApplicantDetails />,
   },
   {
     name: "All Jobs",
