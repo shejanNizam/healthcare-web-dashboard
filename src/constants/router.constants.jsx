@@ -5,8 +5,9 @@ import { MdOutlineSecurityUpdateWarning } from "react-icons/md";
 import { PiUsersThree } from "react-icons/pi";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { TbAirConditioning } from "react-icons/tb";
-import AllJobs from "../pages/AllJobs/AllJobs";
 import TabbedView from "../pages/Main/AddValue/TabbedView";
+import AllJobs from "../pages/Main/AllJobs/AllJobs";
+import JobDetails from "../pages/Main/AllJobs/JobDetails";
 import Blogs from "../pages/Main/Blogs/Blogs";
 import ContactList from "../pages/Main/ContactList/ContactList";
 import DashboardHome from "../pages/Main/DashboardHome/DashboardHome";
@@ -22,6 +23,7 @@ import EditPrivacyPolicy from "../pages/Settings/EditPrivacyPolicy";
 import EditTermsConditions from "../pages/Settings/EditTermsConditions";
 import PrivacyPolicy from "../pages/Settings/PrivacyPolicy";
 import TermsConditions from "../pages/Settings/TermsConditions";
+import AllApplicants from "../pages/Main/AllJobs/AllApplicants";
 
 export const dashboardItems = [
   {
@@ -56,6 +58,14 @@ export const dashboardItems = [
     path: "all-jobs",
     icon: PiUsersThree,
     element: <AllJobs />,
+  },
+  {
+    path: "all-jobs/:id",
+    element: <JobDetails />,
+  },
+  {
+    path: "all-jobs/all-applicants/:id",
+    element: <AllApplicants />,
   },
   {
     name: "Job Post",
