@@ -27,50 +27,50 @@ export default function DashboardHome() {
           <div className="flex justify-around bg-secondary h-36 rounded-lg drop-shadow-xl">
             <div className="flex justify-center items-center gap-16 ">
               <div>
-                <p className="text-[#5E5E5E] font-semibold  xl:text-5xl">
+                <p className="text-[#5E5E5E] font-semibold xl:text-4xl">
                   Total Jobs
                 </p>
-                <p className="text-3xl xl:text-5xl text-primary font-bold">
+                <p className="text-3xl xl:text-4xl text-primary font-bold">
                   {/* {data?.data?.totalUsers} */}
                   {"187"}
                 </p>
               </div>
-              <FaUsers
+              {/* <FaUsers
                 className={`text-primary w-12 h-12 lg:w-16 lg:h-16`}
                 aria-label="Total Users"
-              />
+              /> */}
             </div>
             <div className="border-4 border-primary my-4 rounded"></div>
             <div className="flex justify-center items-center gap-16 ">
               <div>
-                <p className="text-[#5E5E5E] font-semibold  xl:text-5xl">
+                <p className="text-[#5E5E5E] font-semibold  xl:text-4xl">
                   International Application
                 </p>
-                <p className="text-3xl xl:text-5xl text-primary font-bold">
+                <p className="text-3xl xl:text-4xl text-primary font-bold">
                   {/* {data?.data?.totalSessions} */}
                   {"78"}
                 </p>
               </div>
-              <FaBasketball
+              {/* <FaBasketball
                 className={`text-primary w-12 h-12 lg:w-16 lg:h-16`}
                 aria-label="Total Users"
-              />
+              /> */}
             </div>
             <div className="border-4 border-primary my-4 rounded"></div>
             <div className="flex justify-center items-center gap-16 ">
               <div>
-                <p className="text-[#5E5E5E] font-semibold  xl:text-5xl">
+                <p className="text-[#5E5E5E] font-semibold  xl:text-4xl">
                   Contacts
                 </p>
-                <p className="text-3xl xl:text-5xl text-primary font-bold">
+                <p className="text-3xl xl:text-4xl text-primary font-bold">
                   {/* {data?.data?.totalEarnings} */}
                   {"87"}
                 </p>
               </div>
-              <GrMoney
+              {/* <GrMoney
                 className={`text-primary w-12 h-12 lg:w-16 lg:h-16`}
                 aria-label="Total Users"
-              />
+              /> */}
             </div>
           </div>
         </LoaderWraperComp>

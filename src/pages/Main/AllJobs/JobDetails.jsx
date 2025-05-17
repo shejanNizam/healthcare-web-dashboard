@@ -109,7 +109,7 @@ export default function JobDetails() {
           <div className="w-full lg:w-2/3 bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6 relative">
               {/* Bookmark Button */}
-              <button
+              {/* <button
                 onClick={toggleBookmark}
                 className="absolute top-6 right-6 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors  cursor-pointer"
                 aria-label="Bookmark job"
@@ -119,7 +119,7 @@ export default function JobDetails() {
                     isBookmarked ? "text-primary fill-primary" : "text-gray-400"
                   }`}
                 />
-              </button>
+              </button> */}
 
               {/* Hospital Info */}
               <div className="flex items-center mb-6">
