@@ -10,6 +10,8 @@ import AllApplicants from "../pages/Main/AllJobs/AllApplicants";
 import AllApplicantsDetails from "../pages/Main/AllJobs/AllApplicantsDetails";
 import AllJobs from "../pages/Main/AllJobs/AllJobs";
 import JobDetails from "../pages/Main/AllJobs/JobDetails";
+import AddBlog from "../pages/Main/Blogs/AddBlog";
+import BlogDetails from "../pages/Main/Blogs/BlogDetails";
 import Blogs from "../pages/Main/Blogs/Blogs";
 import ContactList from "../pages/Main/ContactList/ContactList";
 import ContactListDetails from "../pages/Main/ContactList/ContactListDetails";
@@ -95,6 +97,18 @@ export const dashboardItems = [
     path: "blogs",
     icon: PiUsersThree,
     element: <Blogs />,
+  },
+  {
+    path: "blogs/:id",
+    element: <BlogDetails />,
+  },
+  {
+    path: "add-blog",
+    element: <AddBlog />,
+  },
+  {
+    path: "edit-blog/:id",
+    element: <AddBlog />,
   },
   {
     name: "Contact List",
