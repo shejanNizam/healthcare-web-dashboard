@@ -6,14 +6,18 @@ import { PiUsersThree } from "react-icons/pi";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { TbAirConditioning } from "react-icons/tb";
 import TabbedView from "../pages/Main/AddValue/TabbedView";
+import AllApplicants from "../pages/Main/AllJobs/AllApplicants";
+import AllApplicantsDetails from "../pages/Main/AllJobs/AllApplicantsDetails";
 import AllJobs from "../pages/Main/AllJobs/AllJobs";
 import JobDetails from "../pages/Main/AllJobs/JobDetails";
 import Blogs from "../pages/Main/Blogs/Blogs";
 import ContactList from "../pages/Main/ContactList/ContactList";
+import ContactListDetails from "../pages/Main/ContactList/ContactListDetails";
 import DashboardHome from "../pages/Main/DashboardHome/DashboardHome";
 import International from "../pages/Main/International/International";
 import InternationalApplicantDetails from "../pages/Main/International/InternationalApplicantDetails";
 import JobPost from "../pages/Main/JobPost/JobPost";
+import JobPostPreview from "../pages/Main/JobPost/JobPostPreview";
 import Notifications from "../pages/Main/Notifications/Notifications";
 import EditMyProfile from "../pages/Profile/EditMyProfile";
 import MyProfile from "../pages/Profile/MyProfile";
@@ -23,8 +27,6 @@ import EditPrivacyPolicy from "../pages/Settings/EditPrivacyPolicy";
 import EditTermsConditions from "../pages/Settings/EditTermsConditions";
 import PrivacyPolicy from "../pages/Settings/PrivacyPolicy";
 import TermsConditions from "../pages/Settings/TermsConditions";
-import AllApplicants from "../pages/Main/AllJobs/AllApplicants";
-import AllApplicantsDetails from "../pages/Main/AllJobs/AllApplicantsDetails";
 
 export const dashboardItems = [
   {
@@ -79,6 +81,10 @@ export const dashboardItems = [
     element: <JobPost />,
   },
   {
+    path: "job-post/preview",
+    element: <JobPostPreview />,
+  },
+  {
     name: "Add value",
     path: "add-value",
     icon: FaBasketballBall,
@@ -95,6 +101,10 @@ export const dashboardItems = [
     path: "contact-list",
     icon: PiUsersThree,
     element: <ContactList />,
+  },
+  {
+    path: "contact-list/:id",
+    element: <ContactListDetails />,
   },
   // {
   //   name: "Community",
