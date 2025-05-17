@@ -9,7 +9,7 @@ export default {
         hash: "#E7F1F8",
         info: "#1077BC",
         button: "#1077BC",
-        playground: "#1077BC",
+        playground: "#359ff0",
         "light-gray": "#E7F8FF",
         "green-playground": "#00C38A",
       },

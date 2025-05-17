@@ -12,13 +12,28 @@ import {
   YAxis,
 } from "recharts";
 import LoaderWraperComp from "../../../Components/LoaderWraperComp";
-import { useGetEarningsQuery } from "../../../redux/features/dashboardHome/dashboardHomeApi";
+// import { useGetEarningsQuery } from "../../../redux/features/dashboardHome/dashboardHomeApi";
 
 const DashboardChart = () => {
   const [year, setYear] = useState(dayjs().year());
 
-  const { data } = useGetEarningsQuery(year);
+  // const { data } = useGetEarningsQuery(year);
   // console.log(data?.data);
+
+  const data = [
+    { month: "Jan", earnings: 4000 },
+    { month: "Feb", earnings: 3000 },
+    { month: "Mar", earnings: 5000 },
+    { month: "Apr", earnings: 4000 },
+    { month: "May", earnings: 6000 },
+    { month: "Jun", earnings: 7000 },
+    { month: "Jul", earnings: 5000 },
+    { month: "Aug", earnings: 6000 },
+    { month: "Sep", earnings: 7000 },
+    { month: "Oct", earnings: 8000 },
+    { month: "Nov", earnings: 6000 },
+    { month: "Dec", earnings: 9000 },
+  ];
 
   const handleYearChange = (date) => {
     if (data) {
@@ -39,7 +54,8 @@ const DashboardChart = () => {
       <LoaderWraperComp>
         <ResponsiveContainer width="100%" height={500}>
           <BarChart
-            data={data?.data}
+            // data={data?.data}
+            data={data}
             syncId="anyId"
             margin={{
               top: 40,
@@ -48,7 +64,7 @@ const DashboardChart = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              tick={{ stroke: "#464343", strokeWidth: 0.5, fill: "#142F62" }}
+              tick={{ stroke: "#464343", strokeWidth: 0.5, fill: "#1077BC" }}
               style={{ fontWeight: "400", color: "#FFFFFF" }}
               dataKey="month"
             />
@@ -63,7 +79,7 @@ const DashboardChart = () => {
             <Legend />
             <Bar
               dataKey="earnings"
-              fill="#142F62"
+              fill="#1077BC"
               barSize={30}
               radius={[0, 0, 0, 0]}
             />

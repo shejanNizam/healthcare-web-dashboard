@@ -3,6 +3,7 @@ import { FaBasketball, FaUsers } from "react-icons/fa6";
 import { GrMoney } from "react-icons/gr";
 import LoaderWraperComp from "../../../Components/LoaderWraperComp";
 import { useGetAllStatsQuery } from "../../../redux/features/dashboardHome/dashboardHomeApi";
+import International from "../International/International";
 import DashboardChart from "./DashboardChart";
 
 export default function DashboardHome() {
@@ -76,6 +77,12 @@ export default function DashboardHome() {
 
         <div>
           <DashboardChart />
+        </div>
+        <div>
+          <h3 className="text-primary text-3xl font-bold mb-2">
+            Recent International Applications
+          </h3>
+          <International />
         </div>
       </div>
     </>

@@ -303,9 +303,11 @@ export default function International({ type = "international" }) {
 
   return (
     <>
-      <div className="bg-button rounded-lg py-4 shadow-md">
+      <div className="bg-button rounded-lg pb-4 shadow-md">
         <div className="flex justify-between items-center p-4">
-          <h3 className="text-2xl text-white font-semibold">Overview</h3>
+          <h3 className="text-2xl text-white font-semibold">
+            International Applications
+          </h3>
           <div className="flex justify-around gap-4">
             <DatePicker
               placeholder="Select Date"
@@ -314,7 +316,7 @@ export default function International({ type = "international" }) {
               onChange={handleDateChange}
             />
             <Button
-              className="bg-primary/50 text-white"
+              className="bg-playground text-white"
               type="primary"
               icon={<IoSearch />}
               onClick={() => setPage(1)}

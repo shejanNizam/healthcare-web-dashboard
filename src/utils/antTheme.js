@@ -1,7 +1,7 @@
 export const mainTheme = {
   token: {
-    colorPrimary: "#00321F",
-    colorInfo: "#00321F",
+    colorPrimary: "#1077BC",
+    colorInfo: "#1077BC",
   },
   components: {
     Button: {
@@ -21,12 +21,12 @@ export const mainTheme = {
     Input: {
       controlHeightLG: 57,
       borderRadiusLG: 16,
-      colorBorder: "#00321F",
-      colorBorderLG: "#00321F",
+      colorBorder: "#1077BC",
+      colorBorderLG: "#1077BC",
     },
     DatePicker: {
-      colorBorder: "#00321F",
-      colorTextPlaceholder: "#464343", // Updated to use a consistent color
+      colorBorder: "#1077BC",
+      colorTextPlaceholder: "#1077BC", // Updated to use a consistent color
     },
     Select: {
       controlHeightLG: 56,
@@ -39,7 +39,7 @@ export const mainTheme = {
       colorTextHeading: "#000000",
       colorBgContainer: "#ffffff",
       headerBg: "#ffffff",
-      headerColor: "#181F81",
+      headerColor: "#1077BC",
       headerBorderRadius: 0,
       borderRadius: 0,
       headerSplitColor: "none",
