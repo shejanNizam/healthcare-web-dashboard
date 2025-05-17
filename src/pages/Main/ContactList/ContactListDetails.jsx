@@ -43,16 +43,13 @@ export default function ContactListDetails() {
   if (!contact) return <p className="text-center mt-8">Contact not found</p>;
 
   return (
-    <div className="max-w-3xl mx-auto mt-8">
-      <h3 className="text-blue-600 text-xl font-semibold mb-4">
-        Contact Details
-      </h3>
+    <div className="max-w-6xl mx-auto mt-8">
       <Button
         type="link"
         onClick={() => navigate(-1)}
-        className="mb-4 text-blue-600"
+        className="mb-4 text-primary flex items-center "
       >
-        &lt; Back
+        &lt; Contact Details
       </Button>
 
       <Card className="bg-blue-50 p-6" bordered={false}>

@@ -177,7 +177,7 @@ export default function AllApplicants({ type = "international" }) {
             >
               <FiChevronLeft className="h-5 w-5" />
             </button>
-            <h1 className="text-xl font-bold ">Details of this Job</h1>
+            <h1 className="text-xl font-bold ">All Applicants</h1>
           </div>
           <div className="flex justify-around gap-4">
             <DatePicker

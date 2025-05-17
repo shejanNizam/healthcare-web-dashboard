@@ -85,19 +85,21 @@ const MyProfile = () => {
             </Button>
           </div>
 
-          <div className="col-span-4 ">
+          <div className="col-span-5 ">
             <div className="col-span-9 space-y-[24px] ">
               <div className="space-y-4">
                 <div>
                   <p className="text-lg  font-medium mb-1">Name</p>
                   <div className="h-[56px] rounded-lg bg-[#EFFAFF] flex items-center px-4 text-primary">
-                    {profileData.name}
+                    {/* {profileData.name} */}
+                    Clement
                   </div>
                 </div>
                 <div>
                   <p className="text-lg  font-medium mb-1">Email</p>
                   <div className="h-[56px] rounded-lg bg-[#EFFAFF] flex items-center px-4 text-primary">
-                    {profileData.email}
+                    {/* {profileData.email} */}
+                    clement@gmail.com
                   </div>
                 </div>
               </div>

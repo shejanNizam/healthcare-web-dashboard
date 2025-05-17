@@ -9,7 +9,7 @@
 import { Button, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 export default function BlogDetails() {
   const navigate = useNavigate();
@@ -19,22 +19,22 @@ export default function BlogDetails() {
       <Button
         type="link"
         onClick={() => navigate(-1)}
-        className="mb-4 text-blue-600"
+        className="mb-4 text-primary"
       >
-        &lt; Details
+        &lt; Blog Details
       </Button>
 
       <img
-        src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80"
+        src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=90"
         alt="Healthcare"
         className="rounded-md w-full max-h-72 object-cover mb-6"
       />
 
-      <Typography>
-        <Title level={4} className="text-blue-700 mb-4">
+      <div>
+        <h3 className="text-primary text-2xl font-semibold mb-4">
           Prioritize your privacy and are committed to protecting your personal
           information
-        </Title>
+        </h3>
 
         <Paragraph className="mb-6 text-base">
           We prioritize your privacy and are committed to protecting your
@@ -49,9 +49,9 @@ export default function BlogDetails() {
           free to contact us.
         </Paragraph>
 
-        <Title level={5} className="text-blue-700 mb-3">
+        <h3 className="text-primary text-2xl font-semibold mb-3">
           How We Use Your Information. Your personal data is used to:
-        </Title>
+        </h3>
 
         <ul className="list-disc list-inside mb-6 text-sm">
           <li>Connect you with job opportunities</li>
@@ -68,7 +68,7 @@ export default function BlogDetails() {
           access, update, or delete your data at any time. For inquiries, feel
           free to contact us.
         </Paragraph>
-      </Typography>
+      </div>
     </div>
   );
 }

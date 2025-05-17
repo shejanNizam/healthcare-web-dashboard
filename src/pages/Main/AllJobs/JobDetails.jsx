@@ -6,7 +6,6 @@
 //   );
 // }
 
-import { useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -15,7 +14,7 @@ import {
   FaMoneyBillWave,
   FaUser,
 } from "react-icons/fa";
-import { FiBookmark, FiChevronLeft } from "react-icons/fi";
+import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 
 const allJobs = [
@@ -61,7 +60,6 @@ const allJobs = [
 export default function JobDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isBookmarked, setIsBookmarked] = useState(false);
 
   // Find the job by id
   const jobDetails = allJobs.find((job) => job.id === id);
@@ -79,10 +77,6 @@ export default function JobDetails() {
       </div>
     );
   }
-
-  const toggleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-  };
 
   const handleBack = () => {
     navigate(-1);
@@ -108,19 +102,6 @@ export default function JobDetails() {
           {/* Left Column (Main Content) */}
           <div className="w-full lg:w-2/3 bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6 relative">
-              {/* Bookmark Button */}
-              {/* <button
-                onClick={toggleBookmark}
-                className="absolute top-6 right-6 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors  cursor-pointer"
-                aria-label="Bookmark job"
-              >
-                <FiBookmark
-                  className={`w-5 h-5 ${
-                    isBookmarked ? "text-primary fill-primary" : "text-gray-400"
-                  }`}
-                />
-              </button> */}
-
               {/* Hospital Info */}
               <div className="flex items-center mb-6">
                 <div className="p-3 bg-blue-50 rounded-full text-primary mr-4">

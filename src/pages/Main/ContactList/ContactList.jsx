@@ -38,34 +38,35 @@ export default function ContactList() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-3xl mx-auto mt-8">
-      <h3 className="text-blue-600 text-xl font-semibold mb-4">Over View</h3>
-      {dummyContacts.map((contact) => (
-        <Card
-          key={contact.id}
-          className="mb-4 bg-blue-50"
-          bodyStyle={{ padding: "16px" }}
-          bordered={false}
-          hoverable
-        >
-          <div className="flex justify-between font-semibold text-base mb-2">
-            <Text>User name : {contact.name}</Text>
-            <Text>Email : {contact.email}</Text>
-          </div>
-          <Paragraph
-            className="text-sm mb-4"
-            ellipsis={{ rows: 2, expandable: false, symbol: "see more" }}
+    <div className="max-w-6xl mx-auto mt-8">
+      <h3 className="text-primary text-2xl font-bold mb-4">Contact List</h3>
+      <div className=" grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {dummyContacts.map((contact) => (
+          <Card
+            key={contact.id}
+            className="mb-4 bg-secondary"
+            bodyStyle={{ padding: "16px" }}
+            hoverable
           >
-            {contact.description}
-          </Paragraph>
-          <Button
-            type="primary"
-            onClick={() => navigate(`/contact-list/${contact.id}`)}
-          >
-            Details
-          </Button>
-        </Card>
-      ))}
+            <div className="flex justify-between font-semibold text-base mb-2">
+              <Text>User name : {contact.name}</Text>
+              <Text>Email : {contact.email}</Text>
+            </div>
+            <Paragraph
+              className="text-sm mb-4"
+              ellipsis={{ rows: 2, expandable: false, symbol: "see more" }}
+            >
+              {contact.description}
+            </Paragraph>
+            <Button
+              type="primary"
+              onClick={() => navigate(`/contact-list/${contact.id}`)}
+            >
+              Details
+            </Button>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

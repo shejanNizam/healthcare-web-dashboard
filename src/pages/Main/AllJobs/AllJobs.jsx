@@ -116,7 +116,7 @@ export default function AllJobs() {
           >
             <button
               style={{
-                backgroundColor: "#7DAADC",
+                backgroundColor: "#1077BC",
                 borderRadius: 6,
                 padding: "6px 12px",
                 color: "white",
@@ -131,7 +131,7 @@ export default function AllJobs() {
 
             <button
               style={{
-                backgroundColor: "#1678C2",
+                backgroundColor: "#1077BC",
                 border: "none",
                 borderRadius: 6,
                 padding: "8px 16px",

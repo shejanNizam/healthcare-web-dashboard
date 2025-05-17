@@ -9,6 +9,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Typography, Upload } from "antd";
 import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 
 const { TextArea } = Input;
@@ -81,7 +82,11 @@ export default function AddBlog() {
 
   return (
     <div className="max-w-3xl mx-auto mt-8 px-4">
-      <h3 className="text-blue-600 text-xl font-semibold mb-6">
+      <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold mb-6">
+        <button onClick={() => navigate(-1)}>
+          {" "}
+          <FaArrowLeft />{" "}
+        </button>
         {id ? "Edit Blog" : "Add Blog"}
       </h3>
 

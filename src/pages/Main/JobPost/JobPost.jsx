@@ -34,6 +34,7 @@ export default function JobPost() {
   const [fileList, setFileList] = useState([]);
 
   const onFinish = (values) => {
+    console.log(values);
     // Prepare data for preview including description and file name
     const formData = {
       ...values,
@@ -43,6 +44,7 @@ export default function JobPost() {
       description,
       companyLogoName: fileList[0]?.name || "",
     };
+
     // For demo: navigate to preview with state
     navigate("/job-post/preview", { state: formData });
   };
@@ -53,9 +55,9 @@ export default function JobPost() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <Title level={4} className="bg-blue-100 p-2 rounded mb-6">
+      <h3 className="text-primary text-2xl font-bold p-2 rounded mb-6">
         Over View
-      </Title>
+      </h3>
       <Form
         form={form}
         layout="vertical"
@@ -169,7 +171,7 @@ export default function JobPost() {
               theme="snow"
               value={description}
               onChange={setDescription}
-              style={{ height: "150px", marginBottom: "30px" }}
+              style={{ height: "150px", marginBottom: "70px" }}
             />
             {!description && (
               <div className="text-red-600 mt-[-25px] mb-4">

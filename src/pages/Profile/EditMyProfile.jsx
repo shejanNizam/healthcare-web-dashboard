@@ -119,7 +119,7 @@ const EditMyProfile = () => {
             </div>
           </div>
 
-          <div className="col-span-9 space-y-[24px]">
+          <div className="col-span-5 space-y-[24px]">
             <Form.Item
               className="text-lg font-medium"
               label="Name"

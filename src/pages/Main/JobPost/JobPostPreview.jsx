@@ -1,10 +1,3 @@
-// export default function JobPostPreview() {
-//   return (
-//     <>
-//       <h3>JobPostPreview</h3>
-//     </>
-//   );
-// }
 import {
   FaCalendarAlt,
   FaClock,
@@ -26,7 +19,7 @@ export default function JobPostPreview() {
         <p>No job data to preview.</p>
         <button
           onClick={() => navigate(-1)}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+          className="mt-4 bg-primary text-white px-4 py-2 rounded"
         >
           Back to Post
         </button>
@@ -79,24 +72,24 @@ export default function JobPostPreview() {
   return (
     <div className="max-w-5xl mx-auto bg-white min-h-screen rounded-lg shadow-md p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Sticky Header with Back Button */}
-      <div className="lg:col-span-3 flex items-center mb-6 sticky top-0 bg-white p-4 shadow">
+      <div className="lg:col-span-3 flex items-center mb-6 sticky top-0 p-4 shadow">
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
           className="mr-4 p-2 rounded hover:bg-gray-200 transition"
         >
-          <FiChevronLeft className="h-6 w-6 text-blue-600" />
+          <FiChevronLeft className="h-6 w-6 text-primary" />
         </button>
-        <h1 className="text-xl font-bold text-blue-700">Preview Job Post</h1>
+        <h1 className="text-2xl font-bold text-primary">Preview Job Post</h1>
       </div>
 
       {/* Left Column */}
       <div className="lg:col-span-2">
         {/* Company and Job Title */}
         <div className="flex items-center mb-6 gap-4">
-          <FaHospital className="text-blue-600 w-8 h-8" />
+          <FaHospital className="text-primary w-8 h-8" />
           <div>
-            <h2 className="text-2xl font-bold text-blue-700">{title}</h2>
+            <h2 className="text-2xl font-bold text-primary">{title}</h2>
             <p className="text-gray-500">{address}</p>
           </div>
         </div>
@@ -147,64 +140,77 @@ export default function JobPostPreview() {
         </p>
       </div>
 
-      {/* Right Column - Job Overview */}
-      <div className="bg-blue-50 p-6 rounded-lg shadow-md">
-        <h3 className="font-semibold text-xl mb-4">Job Overview</h3>
+      {/* Right Column (Job Overview) */}
+      <div className="w-full ">
+        <div className="bg-white lg:sticky lg:top-20 rounded-xl shadow-md overflow-hidden">
+          {/* Job Overview Header */}
+          <div className="bg-primary text-white p-6">
+            <h3 className="text-xl font-bold text-center">Job Overview</h3>
+          </div>
 
-        <div className="flex items-center mb-3 gap-3">
-          <FaMapMarkerAlt className="text-blue-600" />
-          <div>
-            <p className="text-sm font-medium text-gray-500">Address</p>
-            <p>{address}</p>
+          {/* Job Details */}
+          <div className="p-6 space-y-4">
+            <div className="flex items-start">
+              <FaMapMarkerAlt className="text-primary mt-1 mr-3 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Address</p>
+                <p className="text-gray-700">{address}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <FaCalendarAlt className="text-primary mt-1 mr-3 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Start Date</p>
+                <p className="text-gray-700">{startDate}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <FaCalendarAlt className="text-primary mt-1 mr-3 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">End Date</p>
+                <p className="text-gray-700">{endDate}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <FaUser className="text-primary mt-1 mr-3 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Vacancy</p>
+                <p className="text-gray-700">{vacancy}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <FaClock className="text-primary mt-1 mr-3 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">
+                  Hours per week
+                </p>
+                <p className="text-gray-700">{hoursPerWeek}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <FaMoneyBillWave className="text-primary mt-1 mr-3 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Monthly Pay</p>
+                <p className="text-gray-700">{salary}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Apply Button */}
+          <div className="p-6">
+            <button
+              className="mt-6 w-full bg-primary text-white py-3 rounded hover:bg-primary transition"
+              onClick={() => navigate(-1)}
+            >
+              Submit
+            </button>
           </div>
         </div>
-
-        <div className="flex items-center mb-3 gap-3">
-          <FaCalendarAlt className="text-blue-600" />
-          <div>
-            <p className="text-sm font-medium text-gray-500">Start Date</p>
-            <p>{startDate}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center mb-3 gap-3">
-          <FaCalendarAlt className="text-blue-600" />
-          <div>
-            <p className="text-sm font-medium text-gray-500">End Date</p>
-            <p>{endDate}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center mb-3 gap-3">
-          <FaUser className="text-blue-600" />
-          <div>
-            <p className="text-sm font-medium text-gray-500">Vacancy</p>
-            <p>{vacancy}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center mb-3 gap-3">
-          <FaClock className="text-blue-600" />
-          <div>
-            <p className="text-sm font-medium text-gray-500">Hours per week</p>
-            <p>{hoursPerWeek}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center mb-3 gap-3">
-          <FaMoneyBillWave className="text-blue-600" />
-          <div>
-            <p className="text-sm font-medium text-gray-500">Monthly Pay</p>
-            <p>{salary}</p>
-          </div>
-        </div>
-
-        <button
-          className="mt-6 w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition"
-          onClick={() => navigate(-1)}
-        >
-          Submit
-        </button>
       </div>
     </div>
   );

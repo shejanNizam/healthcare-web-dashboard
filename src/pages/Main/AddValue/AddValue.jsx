@@ -61,7 +61,7 @@ const AddValue = ({ type }) => {
     if (isEditMode && editId !== null) {
       const item = data.find((d) => d.id === editId);
       if (item) {
-        form.setFieldsValue({ name: item.name }); // Always set name for any type
+        form.setFieldsValue({ name: item.name });
         if (type === "category") {
           setIconPreview(item.iconPreview || "");
           setIconFile(item.iconFile || null);
@@ -351,7 +351,7 @@ const AddValue = ({ type }) => {
       {/* Delete Confirmation Modal */}
       <Modal
         title="Delete Confirmation"
-        visible={isDeleteModalVisible}
+        open={isDeleteModalVisible}
         onCancel={() => setIsDeleteModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setIsDeleteModalVisible(false)}>

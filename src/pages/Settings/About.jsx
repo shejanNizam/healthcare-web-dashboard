@@ -1,4 +1,4 @@
-import { Button, Spin } from "antd";
+import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import PageHeading from "../../Components/PageHeading";
 import { useGetAboutQuery } from "../../redux/features/setting/settingApi";
@@ -18,7 +18,7 @@ const About = () => {
         />
 
         <div className="w-full bg-white rounded-2xl min-h-[60vh] p-5">
-          {isLoading ? (
+          {/* {isLoading ? (
             <div className="h-[60vh] w-full flex justify-center items-center">
               <Spin size="large" />
             </div>
@@ -27,7 +27,8 @@ const About = () => {
               className="no-tailwind"
               dangerouslySetInnerHTML={{ __html: data?.data?.description }}
             />
-          )}
+          )} */}
+          <h3> Static About Us </h3>
         </div>
 
         <div className="flex justify-end pt-5">
