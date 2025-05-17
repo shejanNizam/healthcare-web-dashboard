@@ -58,7 +58,7 @@ const Header = () => {
   }, [loacatin.pathname]);
   //notification
   return (
-    <div className="w-full h-[88px] flex justify-between items-center rounded-sm py-[16px] px-[32px] bg-primary shadow-sm relative">
+    <div className="w-full h-[88px] flex justify-between items-center rounded-sm py-[16px] px-[32px] bg-primary shadow-sm relative z-50">
       <div className="text-start space-y-0.5">
         <p className="text-[24px] font-medium text-white">
           {"Welcome,"} {user?.name || "Admin"}

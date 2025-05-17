@@ -51,7 +51,7 @@ export default function AllJobs() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="z-20" style={{ padding: 20 }}>
       <h3 style={{ fontWeight: "bold", marginBottom: 20 }}>
         Total jobs: {jobs.length}
       </h3>

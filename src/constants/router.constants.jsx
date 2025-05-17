@@ -24,6 +24,7 @@ import EditTermsConditions from "../pages/Settings/EditTermsConditions";
 import PrivacyPolicy from "../pages/Settings/PrivacyPolicy";
 import TermsConditions from "../pages/Settings/TermsConditions";
 import AllApplicants from "../pages/Main/AllJobs/AllApplicants";
+import AllApplicantsDetails from "../pages/Main/AllJobs/AllApplicantsDetails";
 
 export const dashboardItems = [
   {
@@ -66,6 +67,10 @@ export const dashboardItems = [
   {
     path: "all-jobs/all-applicants/:id",
     element: <AllApplicants />,
+  },
+  {
+    path: "all-jobs/all-applicants/details/:id",
+    element: <AllApplicantsDetails />,
   },
   {
     name: "Job Post",
