@@ -31,6 +31,7 @@ export default function JobPost() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [description, setDescription] = useState("");
+  const [summary, setSummary] = useState("");
   const [fileList, setFileList] = useState([]);
 
   const onFinish = (values) => {
@@ -42,6 +43,10 @@ export default function JobPost() {
       startDate: values.startDate?.format("YYYY-MM-DD") || "",
       endDate: values.endDate?.format("YYYY-MM-DD") || "",
       description,
+      responsibilities,
+      requirements,
+      benefits,
+      summary,
       companyLogoName: fileList[0]?.name || "",
     };
 
@@ -62,9 +67,9 @@ export default function JobPost() {
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        initialValues={{
-          jobType: "Full time",
-        }}
+        // initialValues={{
+        //   jobType: "Full time",
+        // }}
         scrollToFirstError
       >
         <Row gutter={16}>
@@ -176,16 +181,6 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          {/* <Col span={8}>
-            <Form.Item
-              label="End Date"
-              name="endDate"
-              rules={[{ required: true, message: "Please select end date" }]}
-            >
-              <DatePicker className="w-full" />
-            </Form.Item>
-          </Col> */}
-
           <Col span={24}>
             <label className="block mb-2 font-medium">Description</label>
             <ReactQuill
@@ -197,6 +192,25 @@ export default function JobPost() {
             {!description && (
               <div className="text-red-600 mt-[-25px] mb-4">
                 Description is required
+              </div>
+            )}
+          </Col>
+
+          {/* add responsibilities formlist here  */}
+          {/* add requirements formlist here  */}
+          {/* add benefits formlist here  */}
+
+          <Col span={24}>
+            <label className="block mb-2 font-medium">Summary</label>
+            <ReactQuill
+              theme="snow"
+              value={summary}
+              onChange={setSummary}
+              style={{ height: "150px", marginBottom: "70px" }}
+            />
+            {!summary && (
+              <div className="text-red-600 mt-[-25px] mb-4">
+                Summary is required
               </div>
             )}
           </Col>
