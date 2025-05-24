@@ -70,6 +70,17 @@ export default function JobPost() {
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
+              label="Hospital Name"
+              name="hospital-name"
+              rules={[
+                { required: true, message: "Please input hospital name" },
+              ]}
+            >
+              <Input placeholder="Hospital Name" />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
               label="Title"
               name="title"
               rules={[{ required: true, message: "Please input job title" }]}
@@ -90,21 +101,11 @@ export default function JobPost() {
 
           <Col span={12}>
             <Form.Item
-              label="Deadline"
-              name="deadline"
-              rules={[{ required: true, message: "Please select deadline" }]}
+              label="Job Type"
+              name="job-type"
+              rules={[{ required: true, message: "Please select job-type" }]}
             >
-              <DatePicker className="w-full" />
-            </Form.Item>
-          </Col>
-
-          <Col span={12}>
-            <Form.Item
-              label="Job type"
-              name="jobType"
-              rules={[{ required: true }]}
-            >
-              <Select>
+              <Select placeholder="Select Job Type">
                 <Option value="Full time">Full time</Option>
                 <Option value="Part time">Part time</Option>
                 <Option value="Contract">Contract</Option>
@@ -115,11 +116,33 @@ export default function JobPost() {
 
           <Col span={12}>
             <Form.Item
-              label="Salary"
-              name="salary"
-              rules={[{ required: true, message: "Please input salary" }]}
+              label="Hours per week"
+              name="hoursPerWeek"
+              rules={[
+                { required: true, message: "Please input hours per week" },
+              ]}
             >
-              <Input placeholder="$187" />
+              <Input type="number" placeholder="38" />
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item
+              label="Salary"
+              name="salary-range"
+              // rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please select Salary Range" },
+              ]}
+            >
+              <Select type="text" placeholder="Select Salary Range">
+                <Option value="$0 - $5000">$0 - $5000</Option>
+                <Option value="$5001 - $10,000">$5001 - $10,000</Option>
+                <Option value="$10,001 - $15,000">$10,001 - $15,000</Option>
+                <Option value="$15,001 - $20,000">$15,001 - $20,000</Option>
+                <Option value="$20,001 - $25,000">$20,001 - $25,000</Option>
+                <Option value="$25,001 - $30,000">$25,001 - $30,000</Option>
+              </Select>
             </Form.Item>
           </Col>
 
@@ -133,7 +156,7 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label="Start Date"
               name="startDate"
@@ -143,7 +166,17 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          <Col span={8}>
+          <Col span={12}>
+            <Form.Item
+              label="Deadline"
+              name="deadline"
+              rules={[{ required: true, message: "Please select deadline" }]}
+            >
+              <DatePicker className="w-full" />
+            </Form.Item>
+          </Col>
+
+          {/* <Col span={8}>
             <Form.Item
               label="End Date"
               name="endDate"
@@ -151,19 +184,7 @@ export default function JobPost() {
             >
               <DatePicker className="w-full" />
             </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Hours per week"
-              name="hoursPerWeek"
-              rules={[
-                { required: true, message: "Please input hours per week" },
-              ]}
-            >
-              <Input type="number" placeholder="38" />
-            </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col span={24}>
             <label className="block mb-2 font-medium">Description</label>
