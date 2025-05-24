@@ -1,12 +1,8 @@
-// export default function JobPost() {
-//   return (
-//     <>
-//       <h3>JobPost</h3>
-//     </>
-//   );
-// }
-
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -25,7 +21,6 @@ import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 const { Option } = Select;
-const { TextArea } = Input;
 
 export default function JobPost() {
   const [form] = Form.useForm();
@@ -36,21 +31,16 @@ export default function JobPost() {
 
   const onFinish = (values) => {
     console.log(values);
-    // Prepare data for preview including description and file name
     const formData = {
       ...values,
       deadline: values.deadline?.format("YYYY-MM-DD") || "",
       startDate: values.startDate?.format("YYYY-MM-DD") || "",
       endDate: values.endDate?.format("YYYY-MM-DD") || "",
       description,
-      responsibilities,
-      requirements,
-      benefits,
       summary,
       companyLogoName: fileList[0]?.name || "",
     };
 
-    // For demo: navigate to preview with state
     navigate("/job-post/preview", { state: formData });
   };
 
@@ -60,19 +50,20 @@ export default function JobPost() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h3 className="text-primary text-2xl font-bold p-2 rounded mb-6">
-        Over View
-      </h3>
+      <h3 className="text-primary text-2xl font-bold mb-6">Overview</h3>
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        // initialValues={{
-        //   jobType: "Full time",
-        // }}
+        initialValues={{
+          responsibilities: [{ responsibilitiesName: "" }],
+          requirements: [{ requirementsName: "" }],
+          benefits: [{ benefitsName: "" }],
+        }}
         scrollToFirstError
       >
         <Row gutter={16}>
+          {/* Basic Fields */}
           <Col span={24}>
             <Form.Item
               label="Hospital Name"
@@ -84,6 +75,7 @@ export default function JobPost() {
               <Input placeholder="Hospital Name" />
             </Form.Item>
           </Col>
+
           <Col span={24}>
             <Form.Item
               label="Title"
@@ -108,9 +100,9 @@ export default function JobPost() {
             <Form.Item
               label="Job Type"
               name="job-type"
-              rules={[{ required: true, message: "Please select job-type" }]}
+              rules={[{ required: true, message: "Please select job type" }]}
             >
-              <Select placeholder="Select Job Type">
+              <Select placeholder="Select Job Type" style={{ width: "100%" }}>
                 <Option value="Full time">Full time</Option>
                 <Option value="Part time">Part time</Option>
                 <Option value="Contract">Contract</Option>
@@ -133,14 +125,16 @@ export default function JobPost() {
 
           <Col span={12}>
             <Form.Item
-              label="Salary"
+              label="Salary Range"
               name="salary-range"
-              // rules={[{ required: true }]}
               rules={[
-                { required: true, message: "Please select Salary Range" },
+                { required: true, message: "Please select salary range" },
               ]}
             >
-              <Select type="text" placeholder="Select Salary Range">
+              <Select
+                placeholder="Select Salary Range"
+                style={{ width: "100%" }}
+              >
                 <Option value="$0 - $5000">$0 - $5000</Option>
                 <Option value="$5001 - $10,000">$5001 - $10,000</Option>
                 <Option value="$10,001 - $15,000">$10,001 - $15,000</Option>
@@ -181,42 +175,196 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          <Col span={24}>
+          {/* Description */}
+          <Col span={24} className="mb-8">
             <label className="block mb-2 font-medium">Description</label>
             <ReactQuill
               theme="snow"
               value={description}
               onChange={setDescription}
-              style={{ height: "150px", marginBottom: "70px" }}
+              style={{ height: 150 }}
             />
             {!description && (
-              <div className="text-red-600 mt-[-25px] mb-4">
-                Description is required
-              </div>
+              <div className="text-red-600 mt-2">Description is required</div>
             )}
           </Col>
 
-          {/* add responsibilities formlist here  */}
-          {/* add requirements formlist here  */}
-          {/* add benefits formlist here  */}
+          {/* Responsibilities */}
+          <Form.List name="responsibilities">
+            {(fields, { add, remove }) => (
+              <Col span={24} className="mb-8">
+                <h3 className="text-xl text-primary font-bold mb-4">
+                  Responsibilities
+                </h3>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div
+                    key={key}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: 12,
+                      width: "100%",
+                    }}
+                  >
+                    <Form.Item
+                      {...restField}
+                      name={[name, "responsibilitiesName"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter responsibility",
+                        },
+                      ]}
+                      style={{ flex: 1, marginBottom: 0 }}
+                    >
+                      <Input placeholder="Responsibility name..." />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      onClick={() => remove(name)}
+                      style={{
+                        color: "#ef4444",
+                        fontSize: 20,
+                        cursor: "pointer",
+                        marginLeft: 12,
+                      }}
+                    />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Responsibilities
+                  </Button>
+                </Form.Item>
+              </Col>
+            )}
+          </Form.List>
 
-          <Col span={24}>
+          {/* Requirements */}
+          <Form.List name="requirements">
+            {(fields, { add, remove }) => (
+              <Col span={24} className="mb-8">
+                <h3 className="text-xl text-primary font-bold mb-4">
+                  Requirements
+                </h3>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div
+                    key={key}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: 12,
+                      width: "100%",
+                    }}
+                  >
+                    <Form.Item
+                      {...restField}
+                      name={[name, "requirementsName"]}
+                      rules={[
+                        { required: true, message: "Please enter requirement" },
+                      ]}
+                      style={{ flex: 1, marginBottom: 0 }}
+                    >
+                      <Input placeholder="Requirement name..." />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      onClick={() => remove(name)}
+                      style={{
+                        color: "#ef4444",
+                        fontSize: 20,
+                        cursor: "pointer",
+                        marginLeft: 12,
+                      }}
+                    />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Requirements
+                  </Button>
+                </Form.Item>
+              </Col>
+            )}
+          </Form.List>
+
+          {/* Benefits */}
+          <Form.List name="benefits">
+            {(fields, { add, remove }) => (
+              <Col span={24} className="mb-8">
+                <h3 className="text-xl text-primary font-bold mb-4">
+                  Benefits
+                </h3>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div
+                    key={key}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: 12,
+                      width: "100%",
+                    }}
+                  >
+                    <Form.Item
+                      {...restField}
+                      name={[name, "benefitsName"]}
+                      rules={[
+                        { required: true, message: "Please enter benefit" },
+                      ]}
+                      style={{ flex: 1, marginBottom: 0 }}
+                    >
+                      <Input placeholder="Benefit name..." />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      onClick={() => remove(name)}
+                      style={{
+                        color: "#ef4444",
+                        fontSize: 20,
+                        cursor: "pointer",
+                        marginLeft: 12,
+                      }}
+                    />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Benefits
+                  </Button>
+                </Form.Item>
+              </Col>
+            )}
+          </Form.List>
+
+          {/* Summary */}
+          <Col span={24} className="mb-8">
             <label className="block mb-2 font-medium">Summary</label>
             <ReactQuill
               theme="snow"
               value={summary}
               onChange={setSummary}
-              style={{ height: "150px", marginBottom: "70px" }}
+              style={{ height: 150 }}
             />
             {!summary && (
-              <div className="text-red-600 mt-[-25px] mb-4">
-                Summary is required
-              </div>
+              <div className="text-red-600 mt-2">Summary is required</div>
             )}
           </Col>
 
-          <Col span={24}>
-            <Form.Item label="Company logo" name="companyLogo">
+          {/* Company Logo Upload */}
+          <Col span={24} className="mb-8">
+            <Form.Item label="Company Logo" name="companyLogo">
               <Upload
                 beforeUpload={() => false}
                 onChange={onUploadChange}
@@ -229,12 +377,17 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          <Col span={24} className="flex gap-4">
+          {/* Buttons */}
+          <Col
+            span={24}
+            className="flex gap-4 justify-end"
+            style={{ marginTop: 12 }}
+          >
             <Button
               type="primary"
               htmlType="submit"
+              disabled={!description || !summary}
               className="bg-blue-600 hover:bg-blue-700"
-              disabled={!description}
             >
               Submit
             </Button>
@@ -245,11 +398,12 @@ export default function JobPost() {
                   state: {
                     ...form.getFieldsValue(),
                     description,
+                    summary,
                     companyLogoName: fileList[0]?.name || "",
                   },
                 })
               }
-              disabled={!description}
+              disabled={!description || !summary}
             >
               Preview
             </Button>
