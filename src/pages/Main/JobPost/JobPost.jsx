@@ -98,6 +98,38 @@ export default function JobPost() {
 
           <Col span={12}>
             <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: "Please select a category" }]}
+            >
+              <Select placeholder="Select Category" style={{ width: "100%" }}>
+                <Option value="category1">Category 1</Option>
+                <Option value="category2">Category 2</Option>
+                <Option value="category3">Category 3</Option>
+                <Option value="category4">Category 4</Option>
+                <Option value="category5">Category 5</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item
+              label="Profession"
+              name="profession"
+              rules={[{ required: true, message: "Please select profession" }]}
+            >
+              <Select placeholder="Select Profession" style={{ width: "100%" }}>
+                <Option value="Profession1">Profession1</Option>
+                <Option value="Profession2">Profession2</Option>
+                <Option value="Profession3">Profession3</Option>
+                <Option value="Profession4">Profession4</Option>
+                <Option value="Profession5">Profession5</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item
               label="Job Type"
               name="job-type"
               rules={[{ required: true, message: "Please select job type" }]}
