@@ -10,8 +10,9 @@ export const authApi = baseApi.injectEndpoints({
         body: loginData,
       }),
     }),
+    // for protectet routes
     getUserByToken: builder.query({
-      query: () => ({ url: `auth/my-profile`, method: "GET" }),
+      query: () => ({ url: `/user/my-profile`, method: "GET" }),
       providesTags: ["auth"],
     }),
 
@@ -82,14 +83,6 @@ export const authApi = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: ["auth"],
-    }),
-
-    // 10. logout
-    logout: builder.mutation({
-      query: () => ({
-        url: "/logout",
-        method: "POST",
-      }),
     }),
   }),
 });
