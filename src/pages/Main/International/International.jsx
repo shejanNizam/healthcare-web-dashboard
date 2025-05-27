@@ -6,7 +6,7 @@ import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useGetInternationalApplicantQuery } from "../../../redux/features/international/internationalApi";
 
-export default function International({ type = "international" }) {
+export default function International() {
   const [page, setPage] = useState(1);
   const [date, setDate] = useState("");
   const navigate = useNavigate();
@@ -17,24 +17,19 @@ export default function International({ type = "international" }) {
     isError,
   } = useGetInternationalApplicantQuery({ page, date });
 
-  // Handle date change
   const handleDateChange = (date, dateString) => {
     setDate(dateString);
-    setPage(1); // Reset to first page on date change
+    setPage(1);
   };
 
-  // Handle pagination
   const handlePaginationChange = (page) => {
     setPage(page);
   };
 
-  // Navigate to detail page
   const handleDetailsClick = (id) => {
     navigate(`/international/${id}`);
   };
 
-  // Prepare dataSource for the table
-  // Map your API "jobs" array to table data, renaming keys accordingly
   const tableData =
     apiData?.data?.jobs?.map((job) => ({
       key: job._id,
@@ -91,7 +86,7 @@ export default function International({ type = "international" }) {
       align: "center",
       render: (_, record) => (
         <Button
-          className="bg-blue-500 text-white hover:bg-blue-600"
+          className="bg-primary text-white"
           onClick={() => handleDetailsClick(record.id)}
         >
           Details
@@ -128,7 +123,6 @@ export default function International({ type = "international" }) {
           dataSource={tableData}
           pagination={false}
           rowKey="key"
-          locale={{ emptyText: "No applications found." }}
         />
       </div>
 

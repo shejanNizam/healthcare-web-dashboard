@@ -38,7 +38,7 @@ export const jobsApi = baseApi.injectEndpoints({
     // get beautician by id
     getJobApplicantDetails: builder.query({
       query: (id) => ({
-        url: `//${id}`,
+        url: `/apply/single/${id}`,
         method: "GET",
       }),
       providesTags: ["jobs"],
@@ -46,4 +46,9 @@ export const jobsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetJobsQuery, useGetJobDetailsQuery } = jobsApi;
+export const {
+  useGetJobsQuery,
+  useGetJobDetailsQuery,
+  useGetJobApplicantsQuery,
+  useGetJobApplicantDetailsQuery,
+} = jobsApi;

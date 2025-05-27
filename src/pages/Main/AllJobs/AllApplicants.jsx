@@ -10,106 +10,32 @@ import { Button, DatePicker, Pagination, Spin, Table } from "antd";
 import { useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetJobApplicantsQuery } from "../../../redux/features/jobs/jobsApi";
 
-export default function AllApplicants({ type = "international" }) {
+export default function AllApplicants() {
+  const { id } = useParams();
   const [page, setPage] = useState(1);
   const [date, setDate] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Dummy data to simulate API response
-  const dummyData = {
-    data: [
-      {
-        id: "1",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "2",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "3",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "4",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "5",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "6",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "7",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "8",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "9",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-      {
-        id: "10",
-        userId: "3637823",
-        userName: "Jane Cooper",
-        email: "bryan@gmail.com",
-        phone: "5485787633",
-      },
-    ],
-    pagination: {
-      totalItem: 100,
-      totalPage: 10,
-    },
-  };
+  const { data, isLoading } = useGetJobApplicantsQuery({ id, page, date });
+
+  // const applicants = data?.data?.applicants || [];
+  const totalItems = data?.data?.pagination?.totalData || 0;
 
   // Column definitions for the table
   const columns = [
     {
       title: "User ID",
-      dataIndex: "userId",
-      key: "userId",
+      dataIndex: "_id",
+      key: "_id",
       align: "center",
     },
     {
       title: "User Name",
-      dataIndex: "userName",
-      key: "userName",
+      dataIndex: "fullName",
+      key: "fullName",
       align: "center",
     },
     {
@@ -120,8 +46,8 @@ export default function AllApplicants({ type = "international" }) {
     },
     {
       title: "Phone No.",
-      dataIndex: "phone",
-      key: "phone",
+      dataIndex: "phoneNo",
+      key: "phoneNo",
       align: "center",
     },
     {
@@ -130,8 +56,8 @@ export default function AllApplicants({ type = "international" }) {
       align: "center",
       render: (_, record) => (
         <Button
-          className="bg-blue-500 text-white hover:bg-blue-600"
-          onClick={() => handleDetailsClick(record.id)}
+          className="bg-primary text-white "
+          onClick={() => handleDetailsClick(record._id)}
         >
           Details
         </Button>
@@ -197,7 +123,13 @@ export default function AllApplicants({ type = "international" }) {
 
         <Table
           columns={columns}
-          dataSource={dummyData.data}
+          dataSource={
+            data?.data?.applicants.map((applicant) => ({
+              ...applicant?.parsonal_info,
+              key: applicant._id,
+              _id: applicant._id,
+            })) || []
+          }
           pagination={false}
           rowKey="id"
         />
@@ -206,7 +138,7 @@ export default function AllApplicants({ type = "international" }) {
       <div className="flex justify-center p-4">
         <Pagination
           current={page}
-          total={dummyData.pagination.totalItem}
+          total={totalItems}
           pageSize={10}
           onChange={handlePaginationChange}
           showQuickJumper
