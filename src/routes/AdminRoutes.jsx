@@ -19,7 +19,7 @@ const AdminRoutes = ({ children }) => {
       </div>
     );
   }
-  console.log(user, isLoading);
+
   if (user?.role === "admin") {
     return children;
   }

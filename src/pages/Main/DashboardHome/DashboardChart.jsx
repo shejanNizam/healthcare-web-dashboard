@@ -12,28 +12,13 @@ import {
   YAxis,
 } from "recharts";
 import LoaderWraperComp from "../../../Components/LoaderWraperComp";
-// import { useGetEarningsQuery } from "../../../redux/features/dashboardHome/dashboardHomeApi";
+import { useGetApplicantsQuery } from "../../../redux/features/dashboardHome/dashboardHomeApi";
 
 const DashboardChart = () => {
   const [year, setYear] = useState(dayjs().year());
 
-  // const { data } = useGetEarningsQuery(year);
-  // console.log(data?.data);
-
-  const data = [
-    { month: "Jan", earnings: 4000 },
-    { month: "Feb", earnings: 3000 },
-    { month: "Mar", earnings: 5000 },
-    { month: "Apr", earnings: 4000 },
-    { month: "May", earnings: 6000 },
-    { month: "Jun", earnings: 7000 },
-    { month: "Jul", earnings: 5000 },
-    { month: "Aug", earnings: 6000 },
-    { month: "Sep", earnings: 7000 },
-    { month: "Oct", earnings: 8000 },
-    { month: "Nov", earnings: 6000 },
-    { month: "Dec", earnings: 9000 },
-  ];
+  const { data } = useGetApplicantsQuery(year);
+  console.log(data?.data);
 
   const handleYearChange = (date) => {
     if (data) {
@@ -44,7 +29,7 @@ const DashboardChart = () => {
   return (
     <div className="bg-white rounded-lg px-[24px] py-[15px] drop-shadow-lg">
       <div className="flex justify-between items-center">
-        <h4 className="text-[20px] text-primary font-medium">Earnings</h4>
+        <h4 className="text-[20px] text-primary font-medium">Applications</h4>
         <DatePicker
           picker="year"
           value={dayjs().year(year)}
@@ -54,8 +39,7 @@ const DashboardChart = () => {
       <LoaderWraperComp>
         <ResponsiveContainer width="100%" height={500}>
           <BarChart
-            // data={data?.data}
-            data={data}
+            data={data?.data}
             syncId="anyId"
             margin={{
               top: 40,
@@ -78,7 +62,7 @@ const DashboardChart = () => {
             />
             <Legend />
             <Bar
-              dataKey="earnings"
+              dataKey="totalApplications"
               fill="#1077BC"
               barSize={30}
               radius={[0, 0, 0, 0]}

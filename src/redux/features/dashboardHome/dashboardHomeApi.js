@@ -5,22 +5,21 @@ export const dashboardHomeApi = baseApi.injectEndpoints({
     // DashboardHome page
     getAllStats: builder.query({
       query: () => ({
-        url: `/dashboard/overall-stats`,
+        url: `/dashboard/over-view`,
         method: "GET",
       }),
       providesTags: ["dashboard"],
     }),
 
     // Earning in DashboardHome page
-    getEarnings: builder.query({
+    getApplicants: builder.query({
       query: (year) => ({
-        url: `/dashboard/earning-chart?year=${year}`,
+        url: `/dashboard/${year}`,
         method: "GET",
-        // headers: { Authorization: `Bearer ${token}` },
       }),
       providesTags: ["dashboard"],
     }),
   }),
 });
 
-export const { useGetAllStatsQuery, useGetEarningsQuery } = dashboardHomeApi;
+export const { useGetAllStatsQuery, useGetApplicantsQuery } = dashboardHomeApi;

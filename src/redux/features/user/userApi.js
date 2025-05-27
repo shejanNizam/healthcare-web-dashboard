@@ -53,12 +53,6 @@ export const userApi = baseApi.injectEndpoints({
       },
       providesTags: ["transaction", "user"],
     }),
-    adminNotificationBadge: builder.query({
-      query: () => ({
-        url: "notification/badge-count",
-        method: "GET",
-      }),
-    }),
   }),
 });
 
@@ -67,5 +61,4 @@ export const {
   useGetUserDataQuery,
   useUpdateUserDataMutation,
   useAdminNotificationQuery,
-  useAdminNotificationBadgeQuery,
 } = userApi;

@@ -1,6 +1,4 @@
 import { Skeleton } from "antd";
-import { FaBasketball, FaUsers } from "react-icons/fa6";
-import { GrMoney } from "react-icons/gr";
 import LoaderWraperComp from "../../../Components/LoaderWraperComp";
 import { useGetAllStatsQuery } from "../../../redux/features/dashboardHome/dashboardHomeApi";
 import International from "../International/International";
@@ -31,8 +29,8 @@ export default function DashboardHome() {
                   Total Jobs
                 </p>
                 <p className="text-3xl xl:text-4xl text-primary font-bold">
-                  {/* {data?.data?.totalUsers} */}
-                  {"187"}
+                  {data?.data?.totalJobs || "N/A"}
+                  {/* {"187"} */}
                 </p>
               </div>
               {/* <FaUsers
@@ -47,8 +45,8 @@ export default function DashboardHome() {
                   International Application
                 </p>
                 <p className="text-3xl xl:text-4xl text-primary font-bold">
-                  {/* {data?.data?.totalSessions} */}
-                  {"78"}
+                  {data?.data?.totalApply || "N/A"}
+                  {/* {"78"} */}
                 </p>
               </div>
               {/* <FaBasketball
@@ -63,8 +61,8 @@ export default function DashboardHome() {
                   Contacts
                 </p>
                 <p className="text-3xl xl:text-4xl text-primary font-bold">
-                  {/* {data?.data?.totalEarnings} */}
-                  {"87"}
+                  {data?.data?.totalContact || "N/A"}
+                  {/* {"87"} */}
                 </p>
               </div>
               {/* <GrMoney
@@ -78,12 +76,12 @@ export default function DashboardHome() {
         <div>
           <DashboardChart />
         </div>
-        <div>
+        {/* <div>
           <h3 className="text-primary text-3xl font-bold mb-2">
             Recent International Applications
           </h3>
           <International />
-        </div>
+        </div> */}
       </div>
     </>
   );
