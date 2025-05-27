@@ -1,78 +1,27 @@
-import { useEffect, useState } from "react";
+import { Spin } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { useGetInternationalApplicantDetailsQuery } from "../../../redux/features/international/internationalApi";
 
 export default function InternationalApplicantDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [applicant, setApplicant] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate API fetch
-    setLoading(true);
-
-    // Dummy data - would be replaced with API call
-    const fetchData = () => {
-      return {
-        personalInfo: {
-          fullName: "Clementsolus",
-          email: "clementsolus@gmail.com",
-          phone: "9899959550",
-          gender: "Male",
-          country: "USA",
-          state: "New York",
-          city: "New York",
-        },
-        expertise: {
-          profession: "Nurse",
-          discipline: "Front professional",
-          specialty: "Skilled Nursing",
-          secondarySpecialty: "Long-term acute care",
-        },
-        certification: {
-          license: "Medical assistant (New York)",
-          certification: "Therapist",
-        },
-        education: {
-          school: "Nursing",
-          graduationDate: "15 April 2022",
-          degree: "Nursing",
-          major: "Nursing",
-          country: "USA",
-          city: "New York",
-        },
-        employmentHistory: {
-          company: "All Hospital",
-          specialty: "Skilled Nursing",
-          country: "USA",
-          state: "New York",
-          city: "New York",
-          startDate: "12 April 2023",
-          endDate: "16 April 2023",
-        },
-      };
-    };
-
-    // Simulate API call delay
-    setTimeout(() => {
-      setApplicant(fetchData());
-      setLoading(false);
-    }, 500);
-  }, [id]);
+  const { data, isLoading, isError } =
+    useGetInternationalApplicantDetailsQuery(id);
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <Spin size="large" />
       </div>
     );
   }
 
-  if (!applicant) {
+  if (isError || !data || !data.data) {
     return (
       <div className="text-center p-8">
         <h3 className="text-xl font-medium text-gray-700">
@@ -87,6 +36,20 @@ export default function InternationalApplicantDetails() {
       </div>
     );
   }
+
+  const applicant = data.data;
+
+  const personalInfo = applicant.parsonal_info || {};
+  const licenses = applicant.professional_licenses || [];
+  const certifications = applicant.certifications || [];
+  const educationList = applicant.education || [];
+  const employmentList = applicant.emploment || []; // note: "emploment" as per API
+
+  // Helper to format dates (simple YYYY-MM-DD)
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+    return new Date(dateStr).toLocaleDateString();
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -120,37 +83,34 @@ export default function InternationalApplicantDetails() {
             Personal Information
           </h3>
 
-          <div className="mb-6">
-            <h4 className="font-bold text-gray-700 mb-2">About Employee</h4>
-            <div className="space-y-2">
-              <div>
-                <span className="font-medium">Full Name: </span>
-                {applicant.personalInfo.fullName}
-              </div>
-              <div>
-                <span className="font-medium">Email: </span>
-                {applicant.personalInfo.email}
-              </div>
-              <div>
-                <span className="font-medium">Phone no.: </span>
-                {applicant.personalInfo.phone}
-              </div>
-              <div>
-                <span className="font-medium">Gender: </span>
-                {applicant.personalInfo.gender}
-              </div>
-              <div>
-                <span className="font-medium">Country: </span>
-                {applicant.personalInfo.country}
-              </div>
-              <div>
-                <span className="font-medium">State: </span>
-                {applicant.personalInfo.state}
-              </div>
-              <div>
-                <span className="font-medium">City: </span>
-                {applicant.personalInfo.city}
-              </div>
+          <div className="mb-6 space-y-2">
+            <div>
+              <span className="font-medium">Full Name: </span>
+              {personalInfo.fullName || "-"}
+            </div>
+            <div>
+              <span className="font-medium">Email: </span>
+              {personalInfo.email || "-"}
+            </div>
+            <div>
+              <span className="font-medium">Phone no.: </span>
+              {personalInfo.phoneNo || "-"}
+            </div>
+            <div>
+              <span className="font-medium">Gender: </span>
+              {personalInfo.gender || "-"}
+            </div>
+            <div>
+              <span className="font-medium">Country: </span>
+              {personalInfo.country || "-"}
+            </div>
+            <div>
+              <span className="font-medium">State: </span>
+              {personalInfo.state || "-"}
+            </div>
+            <div>
+              <span className="font-medium">City: </span>
+              {personalInfo.city || "-"}
             </div>
           </div>
 
@@ -159,44 +119,73 @@ export default function InternationalApplicantDetails() {
             <div className="space-y-2">
               <div>
                 <span className="font-medium">Profession: </span>
-                {applicant.expertise.profession}
+                {personalInfo.profession || "-"}
               </div>
               <div>
                 <span className="font-medium">Discipline: </span>
-                {applicant.expertise.discipline}
+                {personalInfo.discipline || "-"}
               </div>
               <div>
                 <span className="font-medium">Specialty: </span>
-                {applicant.expertise.specialty}
+                {personalInfo.specialty || "-"}
               </div>
               <div>
                 <span className="font-medium">Secondary specialty: </span>
-                {applicant.expertise.secondarySpecialty}
+                {personalInfo.secondarySpecialty || "-"}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Certification and credentials */}
+        {/* Certification and licenses */}
         <div className="bg-secondary rounded-md p-6 mb-4">
           <h3 className="text-center text-lg font-semibold mb-6">
-            Certification and credentials
+            Certification and Licenses
           </h3>
 
-          <div>
+          {/* Licenses - show all */}
+          <div className="mb-4">
             <h4 className="font-bold text-gray-700 mb-2">
-              License and certificate
+              Professional Licenses
             </h4>
-            <div className="space-y-2">
-              <div>
-                <span className="font-medium">License: </span>
-                {applicant.certification.license}
-              </div>
-              <div>
-                <span className="font-medium">Certification: </span>
-                {applicant.certification.certification}
-              </div>
-            </div>
+            {licenses.length === 0 ? (
+              <div>No licenses found.</div>
+            ) : (
+              licenses.map((license) => (
+                <div key={license._id} className="mb-2 border p-2 rounded">
+                  <div>
+                    <span className="font-medium">License Type: </span>
+                    {license.license_type || "-"}
+                  </div>
+                  <div>
+                    <span className="font-medium">Medical Assistant: </span>
+                    {license.medical_assistant || "-"}
+                  </div>
+                  <div>
+                    <span className="font-medium">City: </span>
+                    {license.city || "-"}
+                  </div>
+                  <div>
+                    <span className="font-medium">State: </span>
+                    {license.state || "-"}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Certifications - array of strings */}
+          <div>
+            <h4 className="font-bold text-gray-700 mb-2">Certifications</h4>
+            {certifications.length === 0 ? (
+              <div>No certifications found.</div>
+            ) : (
+              <ul className="list-disc list-inside">
+                {certifications.map((cert, i) => (
+                  <li key={i}>{cert}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -204,32 +193,38 @@ export default function InternationalApplicantDetails() {
         <div className="bg-secondary rounded-md p-6 mb-4">
           <h3 className="text-center text-lg font-semibold mb-6">Education</h3>
 
-          <div className="space-y-2">
-            <div>
-              <span className="font-medium">School/Program: </span>
-              {applicant.education.school}
-            </div>
-            <div>
-              <span className="font-medium">Graduation Date: </span>
-              {applicant.education.graduationDate}
-            </div>
-            <div>
-              <span className="font-medium">Degree: </span>
-              {applicant.education.degree}
-            </div>
-            <div>
-              <span className="font-medium">Major: </span>
-              {applicant.education.major}
-            </div>
-            <div>
-              <span className="font-medium">Country: </span>
-              {applicant.education.country}
-            </div>
-            <div>
-              <span className="font-medium">City: </span>
-              {applicant.education.city}
-            </div>
-          </div>
+          {educationList.length === 0 ? (
+            <div>No education information found.</div>
+          ) : (
+            educationList.map((edu) => (
+              <div key={edu._id} className="mb-4 border p-3 rounded">
+                <div>
+                  <span className="font-medium">School/Program: </span>
+                  {edu.school || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Graduation Year: </span>
+                  {edu.year || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Degree: </span>
+                  {edu.degree || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Major: </span>
+                  {edu.major || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Country: </span>
+                  {edu.country || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">City: </span>
+                  {edu.city || "-"}
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Employment History */}
@@ -238,36 +233,42 @@ export default function InternationalApplicantDetails() {
             Employment History
           </h3>
 
-          <div className="space-y-2">
-            <div>
-              <span className="font-medium">Company Name: </span>
-              {applicant.employmentHistory.company}
-            </div>
-            <div>
-              <span className="font-medium">Specialty: </span>
-              {applicant.employmentHistory.specialty}
-            </div>
-            <div>
-              <span className="font-medium">Country: </span>
-              {applicant.employmentHistory.country}
-            </div>
-            <div>
-              <span className="font-medium">State: </span>
-              {applicant.employmentHistory.state}
-            </div>
-            <div>
-              <span className="font-medium">City: </span>
-              {applicant.employmentHistory.city}
-            </div>
-            <div>
-              <span className="font-medium">Start Date: </span>
-              {applicant.employmentHistory.startDate}
-            </div>
-            <div>
-              <span className="font-medium">End Date: </span>
-              {applicant.employmentHistory.endDate}
-            </div>
-          </div>
+          {employmentList.length === 0 ? (
+            <div>No employment history found.</div>
+          ) : (
+            employmentList.map((job) => (
+              <div key={job._id} className="mb-4 border p-3 rounded">
+                <div>
+                  <span className="font-medium">Company Name: </span>
+                  {job.company || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Specialty: </span>
+                  {job.specialty || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Country: </span>
+                  {job.country || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">State: </span>
+                  {job.state || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">City: </span>
+                  {job.city || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">Start Date: </span>
+                  {formatDate(job.start_date)}
+                </div>
+                <div>
+                  <span className="font-medium">End Date: </span>
+                  {formatDate(job.end_date)}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
