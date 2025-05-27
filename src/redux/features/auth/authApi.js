@@ -1,5 +1,3 @@
-// import { baseApi } from "../api/baseApi";
-
 import baseApi from "../../api/baseApi";
 
 export const authApi = baseApi.injectEndpoints({
@@ -7,8 +5,7 @@ export const authApi = baseApi.injectEndpoints({
     // 01. login
     login: builder.mutation({
       query: (loginData) => ({
-        // url: "/auth/admin-login",
-        url: "/dashboard/login",
+        url: "/user/login",
         method: "POST",
         body: loginData,
       }),

@@ -6,6 +6,7 @@ import { dashboardItems } from "../constants/router.constants";
 import Auth from "../layouts/Auth/Auth";
 import Main from "../layouts/Main/Main";
 import { routesGenerators } from "../utils/routesGenerators";
+import AdminRoutes from "./AdminRoutes";
 
 // Lazy-loaded components for authentication
 const SignIn = React.lazy(() => import("../pages/Auth/SignIn"));
@@ -31,9 +32,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <AdminRoutes>
-      // </AdminRoutes>
-      <Main />
+      <AdminRoutes>
+        <Main />
+      </AdminRoutes>
     ),
     children: routesGenerators(dashboardItems),
   },

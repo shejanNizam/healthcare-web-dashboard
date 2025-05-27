@@ -28,8 +28,8 @@ const SignIn = () => {
       );
 
       SuccessSwal({
-        title: "Login Successful!",
-        text: "You have successfully logged in!",
+        title: response?.message || response?.data?.message || "Welcome back!",
+        text: "",
       });
 
       navigate(location.state ? location.state : "/");
