@@ -1,5 +1,5 @@
-import { Button, Form, Input, message } from "antd";
-import React, { useState } from "react";
+import { Button, Form, Input, message, Spin } from "antd";
+import { useState } from "react";
 import { PiCameraPlus } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import defaultImage from "../../assets/images/dash-profile.png";
@@ -70,6 +70,13 @@ const EditMyProfile = () => {
     fileInput.click();
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <div className="space-y-[24px] min-h-[83vh] bg-white rounded-2xl">
       <PageHeading

@@ -1,11 +1,3 @@
-// export default function JobDetails() {
-//   return (
-//     <>
-//       <h3>JobDetails</h3>
-//     </>
-//   );
-// }
-
 import {
   FaCalendarAlt,
   FaClock,
@@ -16,55 +8,23 @@ import {
 } from "react-icons/fa";
 import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
-
-const allJobs = [
-  {
-    id: "1",
-    title: "Registered nurse- progressive care",
-    hospital: "AB Hospital",
-    location: "New York, USA",
-    startDate: "25 April 2025",
-    endDate: "12 May 2025",
-    vacancy: 12,
-    hoursPerWeek: 35,
-    monthlyPay: "$ 1250 - $ 1800",
-    responsibilities: [
-      "Provide direct patient care in accordance with medical guidelines",
-      "Monitor and record patient vital signs and medical history",
-      "Administer medications and treatments accurately",
-      "Educate patients and families about ongoing care",
-      "Maintain detailed and up-to-date patient records",
-      "Collaborate with physicians and other healthcare professionals",
-    ],
-    requirements: [
-      "Valid Nursing License (RN)",
-      "Degree in Nursing or equivalent qualification",
-      "Recent work experience in clinical or hospital setting",
-      "Excellent communication and interpersonal skills",
-      "Ability to handle stressful situations with calmness and professionalism",
-      "Basic computer skills for maintaining electronic health records",
-    ],
-    benefits: [
-      "Competitive salary and performance bonuses",
-      "Health insurance and paid sick leave",
-      "Flexible work hours and supportive team environment",
-      "Ongoing training and professional development opportunities",
-      "Safe and modern workplace",
-    ],
-    description:
-      "We are looking for a qualified and compassionate Registered Nurse to join our team. As a nurse in our organization, you will be responsible for providing high-quality patient care, administering medications, monitoring patient conditions, and collaborating with our healthcare team. This role requires strong clinical knowledge, empathy, and a commitment to excellence in healthcare services.",
-  },
-  // Add more jobs as needed...
-];
+import { useGetJobDetailsQuery } from "../../../redux/features/jobs/jobsApi";
 
 export default function JobDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Find the job by id
-  const jobDetails = allJobs.find((job) => job.id === id);
+  const { data, isLoading, isError } = useGetJobDetailsQuery(id);
 
-  if (!jobDetails) {
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (isError || !data || !data.data) {
     return (
       <div className="max-w-7xl mx-auto p-6">
         <button
@@ -78,16 +38,28 @@ export default function JobDetails() {
     );
   }
 
-  const handleBack = () => {
-    navigate(-1);
+  const jobDetails = data.data;
+
+  // Helper to format dates
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+    return new Date(dateStr).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
+  const salaryFormatted = jobDetails.salary
+    ? `$${jobDetails.salary.toLocaleString()}`
+    : "-";
+
   return (
-    <div className="max-w-7xl mx-auto bg-gray-50 min-h-screen ">
+    <div className="max-w-7xl mx-auto bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className=" bg-white shadow-sm p-4 flex items-center">
+      <div className="bg-white shadow-sm p-4 flex items-center">
         <button
-          onClick={handleBack}
+          onClick={() => navigate(-1)}
           className="text-primary mr-2 cursor-pointer"
           aria-label="Go back"
         >
@@ -99,19 +71,27 @@ export default function JobDetails() {
       {/* Main Content */}
       <div className="container mx-auto p-4 lg:p-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left Column (Main Content) */}
+          {/* Left Column */}
           <div className="w-full lg:w-2/3 bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6 relative">
               {/* Hospital Info */}
               <div className="flex items-center mb-6">
                 <div className="p-3 bg-blue-50 rounded-full text-primary mr-4">
-                  <FaHospital className="w-6 h-6" />
+                  {/* {jobDetails.companyLogo ? (
+                    jobDetails.companyLogo
+                  ) : (
+                    <FaHospital className="w-6 h-6" />
+                  )} */}
+                  <FaHospital className="w-6 h-6" />{" "}
+                  {/* Placeholder for hospital logo */}
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">{jobDetails.hospital}</h2>
+                  <h2 className="text-xl font-bold">
+                    {jobDetails.hospitalName}
+                  </h2>
                   <p className="text-gray-500 flex items-center">
                     <FaMapMarkerAlt className="mr-1" />
-                    {jobDetails.location}
+                    {jobDetails.address}
                   </p>
                 </div>
               </div>
@@ -130,7 +110,7 @@ export default function JobDetails() {
                   Key Responsibilities:
                 </h2>
                 <ul className="space-y-2 pl-5 list-disc">
-                  {jobDetails.responsibilities.map((item, index) => (
+                  {jobDetails.responsibilities?.map((item, index) => (
                     <li key={index} className="text-gray-700">
                       {item}
                     </li>
@@ -144,7 +124,7 @@ export default function JobDetails() {
                   Requirements:
                 </h2>
                 <ul className="space-y-2 pl-5 list-disc">
-                  {jobDetails.requirements.map((item, index) => (
+                  {jobDetails.requirements?.map((item, index) => (
                     <li key={index} className="text-gray-700">
                       {item}
                     </li>
@@ -158,7 +138,7 @@ export default function JobDetails() {
                   Benefits:
                 </h2>
                 <ul className="space-y-2 pl-5 list-disc">
-                  {jobDetails.benefits.map((item, index) => (
+                  {jobDetails.benefits?.map((item, index) => (
                     <li key={index} className="text-gray-700">
                       {item}
                     </li>
@@ -166,16 +146,9 @@ export default function JobDetails() {
                 </ul>
               </div>
 
-              {/* Company Description */}
-              <div className="mb-6">
-                <p className="text-gray-700">
-                  Our company is committed to delivering exceptional healthcare
-                  services with compassion and integrity. Our team is dedicated
-                  to providing a supportive and collaborative environment where
-                  staff can thrive and grow professionally. We believe that
-                  quality care starts with a quality team. Join us in making a
-                  difference in the lives of our patients and community.
-                </p>
+              {/* Job summary */}
+              <div className="mb-8">
+                <p className="text-gray-700 mb-6">{jobDetails.summry}</p>
               </div>
             </div>
           </div>
@@ -194,7 +167,7 @@ export default function JobDetails() {
                   <FaMapMarkerAlt className="text-primary mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-gray-500">Address</p>
-                    <p className="text-gray-700">{jobDetails.location}</p>
+                    <p className="text-gray-700">{jobDetails.address}</p>
                   </div>
                 </div>
 
@@ -204,7 +177,9 @@ export default function JobDetails() {
                     <p className="text-sm font-medium text-gray-500">
                       Start Date
                     </p>
-                    <p className="text-gray-700">{jobDetails.startDate}</p>
+                    <p className="text-gray-700">
+                      {formatDate(jobDetails.startDate)}
+                    </p>
                   </div>
                 </div>
 
@@ -212,9 +187,11 @@ export default function JobDetails() {
                   <FaCalendarAlt className="text-primary mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-gray-500">
-                      End Date
+                      Deadline
                     </p>
-                    <p className="text-gray-700">{jobDetails.endDate}</p>
+                    <p className="text-gray-700">
+                      {formatDate(jobDetails.deadline)}
+                    </p>
                   </div>
                 </div>
 
@@ -242,15 +219,15 @@ export default function JobDetails() {
                     <p className="text-sm font-medium text-gray-500">
                       Monthly Pay
                     </p>
-                    <p className="text-gray-700">{jobDetails.monthlyPay}</p>
+                    <p className="text-gray-700">{salaryFormatted}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Apply Button */}
+              {/* Total Applicants */}
               <div className="p-6">
-                <p className="w-full mx-auto text-center bg-primary hover:bg-primary-dark text-white py-3 px-4 rounded-lg font-medium transition-colors ">
-                  Total Applicant (7)
+                <p className="w-full mx-auto text-center bg-primary hover:bg-primary-dark text-white py-3 px-4 rounded-lg font-medium transition-colors">
+                  Total Applicants ({jobDetails.totalApply || 0})
                 </p>
               </div>
             </div>

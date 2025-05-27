@@ -1,11 +1,11 @@
-import { Button, Form } from "antd";
-import React, { useState } from "react";
+import { Button, Form, Spin } from "antd";
+import { useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import defaultImage from "../../assets/images/dash-profile.png";
 import PageHeading from "../../Components/PageHeading";
 import PasswordChangeModalForm from "../../Components/User/PasswordChangeModalForm";
 import { useGetUserByTokenQuery } from "../../redux/features/auth/authApi";
-import defaultImage from "../../assets/images/dash-profile.png";
 
 const baseImageUrl = import.meta.env.VITE_IMAGE_URL;
 
@@ -14,11 +14,10 @@ const MyProfile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading } = useGetUserByTokenQuery();
-  // console.log(data?.data);
 
   const profileData = data?.data || {};
-  const avatarImage = profileData?.image
-    ? `${baseImageUrl}${profileData?.image}`
+  const avatarImage = profileData.image
+    ? `${baseImageUrl}${profileData.image}`
     : defaultImage;
 
   const handleEditProfile = () => {
@@ -32,6 +31,11 @@ const MyProfile = () => {
       </div>
     );
   }
+
+  // Capitalize role first letter
+  const roleLabel =
+    profileData.role?.charAt(0).toUpperCase() + profileData.role?.slice(1) ||
+    "";
 
   return (
     <div className="space-y-[24px] min-h-[83vh] bg-white rounded-2xl">
@@ -58,9 +62,9 @@ const MyProfile = () => {
           className="w-full grid grid-cols-12 gap-x-10 px-14 py-8"
           autoComplete="off"
           initialValues={{
-            image: profileData?.image,
-            name: profileData?.name,
-            email: profileData?.email,
+            image: profileData.image,
+            name: profileData.name,
+            email: profileData.email,
           }}
         >
           <div className="col-span-3 space-y-6">
@@ -69,69 +73,46 @@ const MyProfile = () => {
                 <img
                   src={avatarImage}
                   alt="Profile"
-                  className="h-[144px] w-[144px] rounded-full"
+                  className="h-[144px] w-[144px] rounded-full object-cover"
                 />
               </div>
-              <h5 className="text-lg text-[#222222]">{profileData?.name}</h5>
-              <h4 className="text-2xl text-[#222222]">{"Admin"}</h4>
+              <h5 className="text-lg text-[#222222]">
+                {profileData.name || "N/A"}
+              </h5>
+              <h4 className="text-2xl text-[#222222]">{roleLabel}</h4>
             </div>
             <Button
               onClick={handleEditProfile}
               size="large"
               type="primary"
-              className="px-8 w-full"
+              className="px-8 w-full flex items-center justify-center gap-2"
             >
-              <FiEdit /> Edit Profile
+              <FiEdit />
+              Edit Profile
             </Button>
           </div>
 
-          <div className="col-span-5 ">
-            <div className="col-span-9 space-y-[24px] ">
+          <div className="col-span-5">
+            <div className="col-span-9 space-y-[24px]">
               <div className="space-y-4">
                 <div>
-                  <p className="text-lg  font-medium mb-1">Name</p>
+                  <p className="text-lg font-medium mb-1">Name</p>
                   <div className="h-[56px] rounded-lg bg-[#EFFAFF] flex items-center px-4 text-primary">
-                    {/* {profileData.name} */}
-                    Clement
+                    {profileData.name || "N/A"}
                   </div>
                 </div>
                 <div>
-                  <p className="text-lg  font-medium mb-1">Email</p>
+                  <p className="text-lg font-medium mb-1">Email</p>
                   <div className="h-[56px] rounded-lg bg-[#EFFAFF] flex items-center px-4 text-primary">
-                    {/* {profileData.email} */}
-                    clement@gmail.com
+                    {profileData.email || "N/A"}
                   </div>
                 </div>
               </div>
             </div>
-            {/* <Form.Item className="text-lg font-medium" label="Name" name="name">
-              <Input
-                readOnly
-                size="large"
-                className="h-[56px] rounded-lg mt-3"
-              />
-            </Form.Item>
-            <Form.Item
-              className="text-lg font-medium"
-              label="Email"
-              name="email"
-            >
-              <Input
-                readOnly
-                size="large"
-                className="h-[56px] rounded-lg mt-3"
-              />
-            </Form.Item> */}
-            {/* <Form.Item
-              className="text-lg text-[#222222] font-medium"
-              label="Phone Number"
-              name="phone"
-            >
-              <PhoneCountryInput disabled={true} />
-            </Form.Item> */}
           </div>
         </Form>
       </div>
+
       <PasswordChangeModalForm
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
