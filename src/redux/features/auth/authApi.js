@@ -28,7 +28,7 @@ export const authApi = baseApi.injectEndpoints({
     forgotPassword: builder.mutation({
       query: (data) => {
         return {
-          url: `/auth/forget-password`,
+          url: `/user/forget-password`,
           method: "POST",
           body: data,
         };
@@ -40,7 +40,7 @@ export const authApi = baseApi.injectEndpoints({
     verifyEmail: builder.mutation({
       query: ({ code }) => {
         return {
-          url: `/auth/verify-otp`,
+          url: `/user/verify-forget-otp`,
           method: "POST",
           // headers: { Authorization: `Bearer ${token}` },
           body: { otp: code },
@@ -51,12 +51,11 @@ export const authApi = baseApi.injectEndpoints({
 
     // 04. reset password
     resetPassword: builder.mutation({
-      query: ({ password }) => {
+      query: ({ password, confirmPassword }) => {
         return {
-          url: `/auth/reset-password`,
+          url: `/user/reset-password`,
           method: "POST",
-          // headers: { Authorization: `Bearer ${token}` },
-          body: { password: password },
+          body: { password: password, confirmPassword: confirmPassword },
         };
       },
       invalidatesTags: ["auth"],
@@ -64,9 +63,9 @@ export const authApi = baseApi.injectEndpoints({
 
     // 05. resend otp
     resendOtp: builder.query({
-      query: (email) => ({
+      query: () => ({
         // url: `/otp/resend?userId=${id}`,
-        url: `/auth/resend-otp?email=${email}`,
+        url: `/user/resend`,
         method: "POST",
       }),
       providesTags: ["auth"],

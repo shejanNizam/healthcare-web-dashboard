@@ -34,6 +34,7 @@ const VerifyEmail = () => {
 
     try {
       const response = await verifyEmail({ code }).unwrap();
+      localStorage.setItem("token", response?.data?.token);
       console.log(response);
       SuccessSwal({ title: "Success", text: response.message || "Success" });
       navigate(`/auth/reset-password`);
@@ -48,7 +49,7 @@ const VerifyEmail = () => {
   // Function to handle resending the OTP
   const handleResendOtp = async () => {
     try {
-      const response = await triggerResendOtp(email).unwrap();
+      const response = await triggerResendOtp().unwrap();
       SuccessSwal({
         title: "OTP Sent",
         text:

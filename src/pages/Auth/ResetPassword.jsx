@@ -14,15 +14,18 @@ const ResetPassword = () => {
   const [resetPass, { isLoading }] = useResetPasswordMutation();
 
   const onFinish = async (values) => {
-    // const token = localStorage.getItem("token");
-    console.log(values.rePassword);
-    const password = values.rePassword;
+    console.log(values);
+    const token = localStorage.getItem("token");
+    // console.log(values.confirmPassword);
+    const password = values.password;
+    const confirmPassword = values.confirmPassword;
 
     try {
       const response = await resetPass({
         // id: email,
-        // token,
+        token,
         password: password,
+        confirmPassword: confirmPassword,
       }).unwrap();
 
       SuccessSwal({
@@ -34,7 +37,7 @@ const ResetPassword = () => {
     } catch (error) {
       ErrorSwal({
         title: "",
-        text: error.data.message || error.data || "Something went wrong!",
+        text: error?.data?.message || error?.message || "Something went wrong!",
       });
     }
   };
@@ -77,7 +80,7 @@ const ResetPassword = () => {
               label={
                 <span className="font-medium text-base">New Password</span>
               }
-              name="newPassword"
+              name="password"
               rules={[
                 {
                   required: true,
@@ -108,7 +111,7 @@ const ResetPassword = () => {
                   Confirm New Password
                 </span>
               }
-              name="rePassword"
+              name="confirmPassword"
               rules={[
                 {
                   required: true,
@@ -116,7 +119,7 @@ const ResetPassword = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
-                    if (!value || getFieldValue("newPassword") === value) {
+                    if (!value || getFieldValue("password") === value) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
