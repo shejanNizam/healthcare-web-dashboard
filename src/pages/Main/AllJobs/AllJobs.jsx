@@ -1,5 +1,7 @@
-import { Pagination } from "antd";
+import { Button, Pagination } from "antd";
 import { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useGetJobsQuery } from "../../../redux/features/jobs/jobsApi";
 
@@ -21,9 +23,14 @@ export default function AllJobs() {
   return (
     <>
       <div className="z-20" style={{ padding: 20 }}>
-        <h3 className="text-primary text-2xl font-bold mb-4">
-          Total jobs: {jobs.length}
-        </h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-primary text-2xl font-bold mb-4">
+            Total jobs: {jobs.length}
+          </h3>
+          <Button type="primary" onClick={() => navigate("/job-post")}>
+            Add Job Post <FaPlus />
+          </Button>
+        </div>
         {jobs?.map((job) => (
           <div
             key={job.id}
@@ -86,6 +93,20 @@ export default function AllJobs() {
                 alignItems: "flex-end",
               }}
             >
+              {/* <Tooltip title="Edit">
+                <Button
+                  size="small"
+                  shape="circle"
+                  icon={<FiEdit />}
+                  onClick={() => navigate(`/edit-job-post/${job._id}`)}
+                />
+              </Tooltip> */}
+              <Button
+                type="primary"
+                onClick={() => navigate(`/edit-job-post/${job._id}`)}
+              >
+                Edit Job Post <FiEdit />
+              </Button>
               <button
                 style={{
                   backgroundColor: "#1077BC",

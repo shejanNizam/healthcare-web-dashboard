@@ -29,6 +29,8 @@ export const baseApi = createApi({
     "international",
     "jobs",
     "contact",
+    "upload",
+    "value",
     "settings",
   ],
   endpoints: () => ({}),

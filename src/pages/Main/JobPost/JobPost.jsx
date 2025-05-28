@@ -15,50 +15,112 @@ import {
   Upload,
 } from "antd";
 import { useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { usePostJobMutation } from "../../../redux/features/jobs/jobsApi";
+import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi";
+import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 export default function JobPost() {
+  const { id } = useParams();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [companyLogoUrl, setCompanyLogoUrl] = useState("");
 
-  const onFinish = (values) => {
-    console.log(values);
-    const formData = {
-      ...values,
-      deadline: values.deadline?.format("YYYY-MM-DD") || "",
-      startDate: values.startDate?.format("YYYY-MM-DD") || "",
-      endDate: values.endDate?.format("YYYY-MM-DD") || "",
+  const [uploadFile] = useUploadFileMutation();
+  const { data: categoryV } = useGetValueQuery("Category");
+  const { data: professionV } = useGetValueQuery("Profession");
+
+  const categoryValue = categoryV?.data;
+  const professionValue = professionV?.data;
+
+  const [postJob, { isLoading, isError }] = usePostJobMutation();
+
+  const onFinish = async (values) => {
+    const payload = {
+      hospitalName: values.hospitalName,
+      title: values.title,
+      address: values.address,
+      deadline: values.deadline ? values.deadline.toISOString() : null,
+      jobType: values.jobType,
+      category: values.category,
+      profession: values.profession,
+      salary: Number(values.salary),
+      vacancy: Number(values.vacancy),
+      startDate: values.startDate ? values.startDate.toISOString() : null,
+      hoursPerWeek: Number(values.hoursPerWeek),
       description,
+      responsibilities: values.responsibilities || [],
       summary,
-      companyLogoName: fileList[0]?.name || "",
+      requirements: values.requirements || [],
+      benefits: values.benefits || [],
+      companyLogo: companyLogoUrl,
     };
 
-    navigate("/job-post/preview", { state: formData });
+    console.log("Payload to post:", payload);
+
+    try {
+      const response = await postJob(payload).unwrap();
+      console.log("Job posted successfully:", response);
+      navigate("/job-post/preview", { state: payload });
+    } catch (error) {
+      console.error("Failed to post job:", error);
+    }
   };
 
-  const onUploadChange = ({ fileList }) => {
+  const onUploadChange = async ({ file, fileList }) => {
     setFileList(fileList);
+
+    if (file.status === "removed") {
+      setCompanyLogoUrl("");
+      return;
+    }
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await uploadFile(formData).unwrap();
+
+      if (response.success && response.data?.url) {
+        setCompanyLogoUrl(response.data.url);
+      } else {
+        console.error("Upload failed: ", response.message || "No URL returned");
+        setCompanyLogoUrl("");
+      }
+    } catch (error) {
+      console.error("Upload error: ", error);
+      setCompanyLogoUrl("");
+    }
   };
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h3 className="text-primary text-2xl font-bold mb-6">Overview</h3>
+      {/* <h3 className="text-primary text-2xl font-bold mb-6">Overview</h3> */}
+      <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold mb-6">
+        <button onClick={() => navigate(-1)}>
+          {" "}
+          <FaArrowLeft />{" "}
+        </button>
+        {id ? "Edit Job Post" : "Add Job Post"}
+      </h3>
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
         initialValues={{
-          responsibilities: [{ responsibilitiesName: "" }],
-          requirements: [{ requirementsName: "" }],
-          benefits: [{ benefitsName: "" }],
+          responsibilities: [""],
+          requirements: [""],
+          benefits: [""],
         }}
         scrollToFirstError
       >
@@ -67,7 +129,7 @@ export default function JobPost() {
           <Col span={24}>
             <Form.Item
               label="Hospital Name"
-              name="hospital-name"
+              name="hospitalName"
               rules={[
                 { required: true, message: "Please input hospital name" },
               ]}
@@ -103,11 +165,11 @@ export default function JobPost() {
               rules={[{ required: true, message: "Please select a category" }]}
             >
               <Select placeholder="Select Category" style={{ width: "100%" }}>
-                <Option value="category1">Category 1</Option>
-                <Option value="category2">Category 2</Option>
-                <Option value="category3">Category 3</Option>
-                <Option value="category4">Category 4</Option>
-                <Option value="category5">Category 5</Option>
+                {categoryValue?.map((cat) => (
+                  <Option key={cat._id} value={cat.type}>
+                    {cat.type}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -119,11 +181,11 @@ export default function JobPost() {
               rules={[{ required: true, message: "Please select profession" }]}
             >
               <Select placeholder="Select Profession" style={{ width: "100%" }}>
-                <Option value="Profession1">Profession1</Option>
-                <Option value="Profession2">Profession2</Option>
-                <Option value="Profession3">Profession3</Option>
-                <Option value="Profession4">Profession4</Option>
-                <Option value="Profession5">Profession5</Option>
+                {professionValue?.map((cat) => (
+                  <Option key={cat._id} value={cat.type}>
+                    {cat.type}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -131,14 +193,13 @@ export default function JobPost() {
           <Col span={12}>
             <Form.Item
               label="Job Type"
-              name="job-type"
+              name="jobType"
               rules={[{ required: true, message: "Please select job type" }]}
             >
               <Select placeholder="Select Job Type" style={{ width: "100%" }}>
-                <Option value="Full time">Full time</Option>
-                <Option value="Part time">Part time</Option>
-                <Option value="Contract">Contract</Option>
-                <Option value="Internship">Internship</Option>
+                <Option value="full-time">Full time</Option>
+                <Option value="part-time">Part time</Option>
+                <Option value="contract">Contract</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -157,23 +218,11 @@ export default function JobPost() {
 
           <Col span={12}>
             <Form.Item
-              label="Salary Range"
-              name="salary-range"
-              rules={[
-                { required: true, message: "Please select salary range" },
-              ]}
+              label="Salary"
+              name="salary"
+              rules={[{ required: true, message: "Please input salary " }]}
             >
-              <Select
-                placeholder="Select Salary Range"
-                style={{ width: "100%" }}
-              >
-                <Option value="$0 - $5000">$0 - $5000</Option>
-                <Option value="$5001 - $10,000">$5001 - $10,000</Option>
-                <Option value="$10,001 - $15,000">$10,001 - $15,000</Option>
-                <Option value="$15,001 - $20,000">$15,001 - $20,000</Option>
-                <Option value="$20,001 - $25,000">$20,001 - $25,000</Option>
-                <Option value="$25,001 - $30,000">$25,001 - $30,000</Option>
-              </Select>
+              <Input type="number" placeholder="salary" />
             </Form.Item>
           </Col>
 
@@ -212,6 +261,7 @@ export default function JobPost() {
             <label className="block mb-2 font-medium">Description</label>
             <ReactQuill
               theme="snow"
+              name="description"
               value={description}
               onChange={setDescription}
               style={{ height: 150 }}
@@ -240,7 +290,7 @@ export default function JobPost() {
                   >
                     <Form.Item
                       {...restField}
-                      name={[name, "responsibilitiesName"]}
+                      name={[name]}
                       rules={[
                         {
                           required: true,
@@ -295,7 +345,7 @@ export default function JobPost() {
                   >
                     <Form.Item
                       {...restField}
-                      name={[name, "requirementsName"]}
+                      name={[name]}
                       rules={[
                         { required: true, message: "Please enter requirement" },
                       ]}
@@ -347,7 +397,7 @@ export default function JobPost() {
                   >
                     <Form.Item
                       {...restField}
-                      name={[name, "benefitsName"]}
+                      name={[name]}
                       rules={[
                         { required: true, message: "Please enter benefit" },
                       ]}
@@ -385,6 +435,7 @@ export default function JobPost() {
             <label className="block mb-2 font-medium">Summary</label>
             <ReactQuill
               theme="snow"
+              name="summary"
               value={summary}
               onChange={setSummary}
               style={{ height: 150 }}

@@ -83,6 +83,10 @@ export const dashboardItems = [
     element: <JobPost />,
   },
   {
+    path: "edit-job-post/:id",
+    element: <JobPost />,
+  },
+  {
     path: "job-post/preview",
     element: <JobPostPreview />,
   },
@@ -120,34 +124,6 @@ export const dashboardItems = [
     path: "contact-list/:id",
     element: <ContactListDetails />,
   },
-  // {
-  //   name: "Community",
-  //   path: "community",
-  //   icon: RiUserCommunityFill,
-  //   element: <Community />,
-  // },
-  // {
-  //   path: "community/:id",
-  //   element: <GroupDetails />,
-  // },
-  // {
-  //   path: "community/community-all-members/:id",
-  //   element: <AllMember />,
-  // },
-
-  // {
-  //   name: "Banner",
-  //   path: "ad",
-  //   icon: GiTatteredBanner,
-  //   element: <Ad />,
-  // },
-
-  // {
-  //   name: "Earnings",
-  //   path: "earnings",
-  //   icon: GrMoney,
-  //   element: <EarningHistory />,
-  // },
   {
     name: "Settings",
     rootPath: "settings",

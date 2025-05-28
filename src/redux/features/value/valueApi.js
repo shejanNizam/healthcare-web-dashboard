@@ -3,16 +3,15 @@ import baseApi from "../../api/baseApi";
 export const jobsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // all beautician
-    getJobs: builder.query({
-      query: ({ page = 1, limit = 10 }) => ({
-        url: `/job/all`,
+    getValue: builder.query({
+      query: (value) => ({
+        url: `/value/all/${value}`,
         method: "GET",
         params: {
-          page,
-          limit,
+          value,
         },
       }),
-      providesTags: ["jobs"],
+      providesTags: ["value"],
     }),
     // get beautician by id
     getJobDetails: builder.query({
@@ -56,10 +55,4 @@ export const jobsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useGetJobsQuery,
-  useGetJobDetailsQuery,
-  useGetJobApplicantsQuery,
-  useGetJobApplicantDetailsQuery,
-  usePostJobMutation,
-} = jobsApi;
+export const { useGetValueQuery } = jobsApi;
