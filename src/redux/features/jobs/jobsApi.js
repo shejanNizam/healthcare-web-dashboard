@@ -45,9 +45,19 @@ export const jobsApi = baseApi.injectEndpoints({
     }),
 
     // -------------
+    // post jobs
     postJob: builder.mutation({
       query: (jobData) => ({
         url: "/job/create",
+        method: "POST",
+        body: jobData,
+      }),
+      invalidatesTags: ["jobs"],
+    }),
+    // update jobs
+    updateJob: builder.mutation({
+      query: ({ id, jobData }) => ({
+        url: `/job/update/${id}`,
         method: "POST",
         body: jobData,
       }),
@@ -62,4 +72,5 @@ export const {
   useGetJobApplicantsQuery,
   useGetJobApplicantDetailsQuery,
   usePostJobMutation,
+  useUpdateJobMutation,
 } = jobsApi;

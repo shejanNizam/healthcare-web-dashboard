@@ -148,7 +148,7 @@ export default function JobDetails() {
 
               {/* Job summary */}
               <div className="mb-8">
-                <p className="text-gray-700 mb-6">{jobDetails.summry}</p>
+                <p className="text-gray-700 mb-6">{jobDetails.summary}</p>
               </div>
             </div>
           </div>

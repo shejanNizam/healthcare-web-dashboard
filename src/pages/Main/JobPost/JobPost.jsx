@@ -11,25 +11,29 @@ import {
   Input,
   Row,
   Select,
-  Typography,
   Upload,
 } from "antd";
-import { useState } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { usePostJobMutation } from "../../../redux/features/jobs/jobsApi";
+import {
+  useGetJobDetailsQuery,
+  usePostJobMutation,
+  useUpdateJobMutation,
+} from "../../../redux/features/jobs/jobsApi";
 import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi";
 import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
-const { Title } = Typography;
 const { Option } = Select;
 
 export default function JobPost() {
   const { id } = useParams();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
   const [fileList, setFileList] = useState([]);
@@ -42,7 +46,64 @@ export default function JobPost() {
   const categoryValue = categoryV?.data;
   const professionValue = professionV?.data;
 
-  const [postJob, { isLoading, isError }] = usePostJobMutation();
+  // Fetch job details if editing
+  const { data: singleJobD, isSuccess: jobLoaded } = useGetJobDetailsQuery(id, {
+    skip: !id,
+  });
+  const singleJobDetails = singleJobD?.data;
+
+  const [postJob] = usePostJobMutation();
+  const [updateJob] = useUpdateJobMutation();
+
+  // Populate form when job details loaded
+  useEffect(() => {
+    if (jobLoaded && singleJobDetails) {
+      form.setFieldsValue({
+        hospitalName: singleJobDetails.hospitalName,
+        title: singleJobDetails.title,
+        address: singleJobDetails.address,
+        deadline: singleJobDetails.deadline
+          ? moment(singleJobDetails.deadline)
+          : null,
+        jobType: singleJobDetails.jobType,
+        category: singleJobDetails.category,
+        profession: singleJobDetails.profession,
+        salary: singleJobDetails.salary,
+        vacancy: singleJobDetails.vacancy,
+        startDate: singleJobDetails.startDate
+          ? moment(singleJobDetails.startDate)
+          : null,
+        hoursPerWeek: singleJobDetails.hoursPerWeek,
+        responsibilities: singleJobDetails.responsibilities.length
+          ? singleJobDetails.responsibilities
+          : [""],
+        requirements: singleJobDetails.requirements.length
+          ? singleJobDetails.requirements
+          : [""],
+        benefits: singleJobDetails.benefits.length
+          ? singleJobDetails.benefits
+          : [""],
+      });
+
+      setDescription(singleJobDetails.description || "");
+      setSummary(singleJobDetails.summary || "");
+
+      if (singleJobDetails.companyLogo) {
+        setCompanyLogoUrl(singleJobDetails.companyLogo);
+        setFileList([
+          {
+            uid: "-1",
+            name: "company-logo.jpg",
+            status: "done",
+            url: singleJobDetails.companyLogo,
+          },
+        ]);
+      } else {
+        setCompanyLogoUrl("");
+        setFileList([]);
+      }
+    }
+  }, [jobLoaded, singleJobDetails, form]);
 
   const onFinish = async (values) => {
     const payload = {
@@ -65,14 +126,19 @@ export default function JobPost() {
       companyLogo: companyLogoUrl,
     };
 
-    console.log("Payload to post:", payload);
-
     try {
-      const response = await postJob(payload).unwrap();
-      console.log("Job posted successfully:", response);
-      navigate("/job-post/preview", { state: payload });
+      let response;
+      if (id) {
+        response = await updateJob({ id, jobData: payload }).unwrap();
+      } else {
+        response = await postJob(payload).unwrap();
+        console.log("Job posted successfully:", response);
+      }
+
+      navigate("/all-jobs");
+      // navigate("/job-post/preview", { state: payload });
     } catch (error) {
-      console.error("Failed to post job:", error);
+      console.error("Failed to post/update job:", error);
     }
   };
 
@@ -83,11 +149,12 @@ export default function JobPost() {
       setCompanyLogoUrl("");
       return;
     }
-    if (!file) return;
+
+    if (!file.originFileObj) return;
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file.originFileObj);
 
       const response = await uploadFile(formData).unwrap();
 
@@ -103,13 +170,27 @@ export default function JobPost() {
     }
   };
 
+  // Get current form values + quill content for preview navigation
+  const handlePreview = () => {
+    const values = form.getFieldsValue(true); // get all fields, including empty
+    navigate("/job-post/preview", {
+      state: {
+        ...values,
+        description,
+        summary,
+        responsibilities: values.responsibilities || [],
+        requirements: values.requirements || [],
+        benefits: values.benefits || [],
+        companyLogoName: companyLogoUrl || "",
+      },
+    });
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      {/* <h3 className="text-primary text-2xl font-bold mb-6">Overview</h3> */}
       <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold mb-6">
         <button onClick={() => navigate(-1)}>
-          {" "}
-          <FaArrowLeft />{" "}
+          <FaArrowLeft />
         </button>
         {id ? "Edit Job Post" : "Add Job Post"}
       </h3>
@@ -125,7 +206,6 @@ export default function JobPost() {
         scrollToFirstError
       >
         <Row gutter={16}>
-          {/* Basic Fields */}
           <Col span={24}>
             <Form.Item
               label="Hospital Name"
@@ -222,7 +302,7 @@ export default function JobPost() {
               name="salary"
               rules={[{ required: true, message: "Please input salary " }]}
             >
-              <Input type="number" placeholder="salary" />
+              <Input type="number" placeholder="Salary" />
             </Form.Item>
           </Col>
 
@@ -256,12 +336,10 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          {/* Description */}
           <Col span={24} className="mb-8">
             <label className="block mb-2 font-medium">Description</label>
             <ReactQuill
               theme="snow"
-              name="description"
               value={description}
               onChange={setDescription}
               style={{ height: 150 }}
@@ -271,7 +349,6 @@ export default function JobPost() {
             )}
           </Col>
 
-          {/* Responsibilities */}
           <Form.List name="responsibilities">
             {(fields, { add, remove }) => (
               <Col span={24} className="mb-8">
@@ -326,7 +403,6 @@ export default function JobPost() {
             )}
           </Form.List>
 
-          {/* Requirements */}
           <Form.List name="requirements">
             {(fields, { add, remove }) => (
               <Col span={24} className="mb-8">
@@ -378,7 +454,6 @@ export default function JobPost() {
             )}
           </Form.List>
 
-          {/* Benefits */}
           <Form.List name="benefits">
             {(fields, { add, remove }) => (
               <Col span={24} className="mb-8">
@@ -430,12 +505,10 @@ export default function JobPost() {
             )}
           </Form.List>
 
-          {/* Summary */}
           <Col span={24} className="mb-8">
             <label className="block mb-2 font-medium">Summary</label>
             <ReactQuill
               theme="snow"
-              name="summary"
               value={summary}
               onChange={setSummary}
               style={{ height: 150 }}
@@ -445,7 +518,6 @@ export default function JobPost() {
             )}
           </Col>
 
-          {/* Company Logo Upload */}
           <Col span={24} className="mb-8">
             <Form.Item label="Company Logo" name="companyLogo">
               <Upload
@@ -460,7 +532,6 @@ export default function JobPost() {
             </Form.Item>
           </Col>
 
-          {/* Buttons */}
           <Col
             span={24}
             className="flex gap-4 justify-end"
@@ -470,26 +541,34 @@ export default function JobPost() {
               type="primary"
               htmlType="submit"
               disabled={!description || !summary}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary w-full"
             >
-              Submit
+              {id ? "Update Job" : "Post Job"}
             </Button>
-            <Button
-              type="default"
-              onClick={() =>
-                navigate("/job-post/preview", {
-                  state: {
-                    ...form.getFieldsValue(),
-                    description,
-                    summary,
-                    companyLogoName: fileList[0]?.name || "",
-                  },
-                })
-              }
-              disabled={!description || !summary}
-            >
-              Preview
-            </Button>
+            {/* {id ? (
+              <></>
+            ) : (
+              <Button
+                type="default"
+                onClick={() => {
+                  const values = form.getFieldsValue(true);
+                  navigate("/job-post/preview", {
+                    state: {
+                      ...values,
+                      description,
+                      summary,
+                      responsibilities: values.responsibilities || [],
+                      requirements: values.requirements || [],
+                      benefits: values.benefits || [],
+                      companyLogoName: companyLogoUrl || "",
+                    },
+                  });
+                }}
+                disabled={!description || !summary}
+              >
+                Preview
+              </Button>
+            )} */}
           </Col>
         </Row>
       </Form>
