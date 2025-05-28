@@ -1,6 +1,6 @@
 import baseApi from "../../api/baseApi";
 
-export const communityApi = baseApi.injectEndpoints({
+export const internationalApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // all beautician
     getInternationalApplicant: builder.query({
@@ -29,4 +29,4 @@ export const communityApi = baseApi.injectEndpoints({
 export const {
   useGetInternationalApplicantQuery,
   useGetInternationalApplicantDetailsQuery,
-} = communityApi;
+} = internationalApi;

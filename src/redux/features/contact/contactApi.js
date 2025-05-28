@@ -1,6 +1,6 @@
 import baseApi from "../../api/baseApi";
 
-export const communityApi = baseApi.injectEndpoints({
+export const contactApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getContacts: builder.query({
       query: ({ page = 1, limit = 10 }) => ({
@@ -24,4 +24,4 @@ export const communityApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetContactsQuery, useGetContactDetailsQuery } = communityApi;
+export const { useGetContactsQuery, useGetContactDetailsQuery } = contactApi;
