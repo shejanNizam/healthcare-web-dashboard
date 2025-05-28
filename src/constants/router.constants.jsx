@@ -77,9 +77,9 @@ export const dashboardItems = [
     element: <AllApplicantsDetails />,
   },
   {
-    name: "Job Post",
+    // name: "Job Post",
     path: "job-post",
-    icon: PiUsersThree,
+    // icon: PiUsersThree,
     element: <JobPost />,
   },
   {

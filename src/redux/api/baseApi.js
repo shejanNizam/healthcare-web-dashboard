@@ -31,6 +31,7 @@ export const baseApi = createApi({
     "contact",
     "upload",
     "value",
+    "blogs",
     "settings",
   ],
   endpoints: () => ({}),
