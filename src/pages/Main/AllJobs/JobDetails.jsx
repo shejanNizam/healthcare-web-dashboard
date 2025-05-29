@@ -10,6 +10,8 @@ import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetJobDetailsQuery } from "../../../redux/features/jobs/jobsApi";
 
+const baseImageUrl = import.meta.env.VITE_IMAGE_URL;
+
 export default function JobDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -77,12 +79,19 @@ export default function JobDetails() {
               {/* Hospital Info */}
               <div className="flex items-center mb-6">
                 <div className="p-3 bg-blue-50 rounded-full text-primary mr-4">
-                  {/* {jobDetails.companyLogo ? (
-                    jobDetails.companyLogo
-                  ) : (
-                    <FaHospital className="w-6 h-6" />
-                  )} */}
-                  <FaHospital className="w-6 h-6" />{" "}
+                  <img
+                    src={
+                      jobDetails.companyLogo ? (
+                        baseImageUrl + jobDetails.companyLogo
+                      ) : (
+                        <FaHospital className="w-6 h-6" />
+                      )
+                    }
+                    alt={jobDetails.hospitalName}
+                    className="rounded-full w-8 h-8 object-cover "
+                  />
+
+                  {/* <FaHospital className="w-6 h-6" />{" "} */}
                   {/* Placeholder for hospital logo */}
                 </div>
                 <div>
@@ -101,7 +110,13 @@ export default function JobDetails() {
                 <h1 className="text-2xl font-bold text-primary mb-4">
                   {jobDetails.title}
                 </h1>
-                <p className="text-gray-700 mb-6">{jobDetails.description}</p>
+                <p
+                  className="mb-6 text-base"
+                  dangerouslySetInnerHTML={{
+                    __html: jobDetails.description,
+                  }}
+                />
+                {/* <p className="text-gray-700 mb-6">{jobDetails.description}</p> */}
               </div>
 
               {/* Responsibilities */}
@@ -148,7 +163,13 @@ export default function JobDetails() {
 
               {/* Job summary */}
               <div className="mb-8">
-                <p className="text-gray-700 mb-6">{jobDetails.summary}</p>
+                <p
+                  className="mb-6 text-base"
+                  dangerouslySetInnerHTML={{
+                    __html: jobDetails.summary,
+                  }}
+                />
+                {/* <p className="text-gray-700 mb-6">{jobDetails.summary}</p> */}
               </div>
             </div>
           </div>

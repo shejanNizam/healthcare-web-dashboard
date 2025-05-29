@@ -23,6 +23,15 @@ export const valueApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["value"],
     }),
+    //  update
+    updateValue: builder.mutation({
+      query: ({ id, value, jobData }) => ({
+        url: `/value/update/${value}/${id}`,
+        method: "POST",
+        body: jobData,
+      }),
+      invalidatesTags: ["value"],
+    }),
 
     // delete
     deleteValue: builder.mutation({
@@ -35,5 +44,9 @@ export const valueApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetValueQuery, useAddValueMutation, useDeleteValueMutation } =
-  valueApi;
+export const {
+  useGetValueQuery,
+  useAddValueMutation,
+  useUpdateValueMutation,
+  useDeleteValueMutation,
+} = valueApi;

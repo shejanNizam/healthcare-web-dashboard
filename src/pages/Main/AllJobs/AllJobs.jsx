@@ -1,16 +1,28 @@
-import { Button, Pagination } from "antd";
+import { Button, message, Modal, Pagination, Tooltip } from "antd";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useGetJobsQuery } from "../../../redux/features/jobs/jobsApi";
+import {
+  useDeleteJobMutation,
+  useGetJobsQuery,
+} from "../../../redux/features/jobs/jobsApi";
 
 export default function AllJobs() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
-  const { data } = useGetJobsQuery({ page });
+  const openDeleteModal = (id) => {
+    setDeleteId(id);
+    setIsModalOpen(true);
+  };
+
+  const { data, refetch } = useGetJobsQuery({ page });
   console.log(data);
+
+  const [deleteJob] = useDeleteJobMutation();
 
   const jobs = data?.data?.allJobs || [];
 
@@ -19,6 +31,22 @@ export default function AllJobs() {
   };
 
   const totalItems = data?.data?.pagination?.totalData || 0;
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    try {
+      // Pass object with id as expected by API
+      await deleteJob({ id: deleteId }).unwrap();
+      message.success("Job deleted successfully");
+      setIsModalOpen(false);
+      setDeleteId(null);
+      refetch();
+    } catch (error) {
+      message.error("Failed to delete job");
+      setIsModalOpen(false);
+      setDeleteId(null);
+    }
+  };
 
   return (
     <>
@@ -71,16 +99,16 @@ export default function AllJobs() {
                 {job?.title}
               </div>
               <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.4 }}>
-                {job.description.slice(0, 150)}{" "}
-                <span
-                  onClick={() => navigate(`/all-jobs/${job._id}`)}
-                  className="text-primary cursor-pointer"
-                >
-                  See nome...
-                </span>
+                <p
+                  className="mb-6 text-base"
+                  dangerouslySetInnerHTML={{
+                    __html: job.description.slice(0, 150) + "...",
+                  }}
+                />
               </div>
               <div className="text-primary font-bold text-lg ">
-                Monthly Pay: ${job.salary}
+                Monthly Pay: $
+                {job.salary ? `${job.salary.toLocaleString()}` : "-"}
               </div>
             </div>
 
@@ -135,6 +163,15 @@ export default function AllJobs() {
               >
                 Details
               </button>
+              <Tooltip title="Delete">
+                <Button
+                  size="small"
+                  shape="circle"
+                  danger
+                  icon={<FiTrash2 />}
+                  onClick={() => openDeleteModal(job._id)}
+                />
+              </Tooltip>
             </div>
           </div>
         ))}
@@ -149,6 +186,17 @@ export default function AllJobs() {
           showSizeChanger={false}
         />
       </div>
+      <Modal
+        title="Confirm Delete"
+        open={isModalOpen}
+        onOk={handleDelete}
+        onCancel={() => setIsModalOpen(false)}
+        okText="Delete"
+        okButtonProps={{ danger: true }}
+        centered
+      >
+        <p>Are you sure you want to delete this blog?</p>
+      </Modal>
     </>
   );
 }

@@ -1,10 +1,3 @@
-// export default function AddValue({ type }) {
-//   return (
-//     <>
-//       <h3>AddValue = {type} </h3>
-//     </>
-//   );
-// }
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Table, Upload, message } from "antd";
 import { useEffect, useState } from "react";
