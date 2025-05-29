@@ -143,7 +143,7 @@ export default function AddBlog() {
           <Input placeholder="Blog title" />
         </Form.Item>
 
-        <div className="my-4">
+        <div className="my-12">
           <label className="block mb-2 font-medium">Description</label>
           <ReactQuill
             theme="snow"

@@ -47,11 +47,11 @@ export default function BlogDetails() {
         &lt; Back
       </Button>
 
-      {/* <img
-        src={bannerUrl}
+      <img
+        src={baseImageUrl + banner}
         alt={blogTitle}
         className="rounded-md w-full max-h-72 object-cover mb-6"
-      /> */}
+      />
 
       <h3 className="text-primary text-2xl font-semibold mb-4">{blogTitle}</h3>
 
