@@ -130,9 +130,6 @@ export default function AddBlog() {
           >
             <Button icon={<UploadOutlined />}>Upload Banner</Button>
           </Upload>
-          {companyLogoUrl && (
-            <Text className="ml-4 text-green-600">{companyLogoUrl}</Text>
-          )}
         </Form.Item>
 
         <Form.Item

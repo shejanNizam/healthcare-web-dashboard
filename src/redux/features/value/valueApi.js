@@ -35,8 +35,8 @@ export const valueApi = baseApi.injectEndpoints({
 
     // delete
     deleteValue: builder.mutation({
-      query: ({ value, id }) => ({
-        url: `/value/${value}/${id}`,
+      query: ({ id }) => ({
+        url: `/value/delete/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["value"],
