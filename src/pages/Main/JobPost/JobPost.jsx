@@ -38,6 +38,7 @@ export default function JobPost() {
   const [summary, setSummary] = useState("");
   const [fileList, setFileList] = useState([]);
   const [companyLogoUrl, setCompanyLogoUrl] = useState("");
+  console.log(companyLogoUrl);
 
   const [uploadFile] = useUploadFileMutation();
   const { data: categoryV } = useGetValueQuery("Category");
@@ -150,16 +151,16 @@ export default function JobPost() {
       return;
     }
 
-    if (!file.originFileObj) return;
+    if (!file) return;
 
     try {
       const formData = new FormData();
-      formData.append("file", file.originFileObj);
+      formData.append("file", file);
 
       const response = await uploadFile(formData).unwrap();
 
-      if (response.success && response.data?.url) {
-        setCompanyLogoUrl(response.data.url);
+      if (response.success && response.data?.path) {
+        setCompanyLogoUrl(response.data.path);
       } else {
         console.error("Upload failed: ", response.message || "No URL returned");
         setCompanyLogoUrl("");

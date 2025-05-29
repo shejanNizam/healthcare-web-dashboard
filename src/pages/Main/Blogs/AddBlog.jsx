@@ -1,117 +1,168 @@
-// export default function AddBlog() {
-//   return (
-//     <>
-//       <h3>AddBlog</h3>
-//     </>
-//   );
-// }
-
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Typography, Upload } from "antd";
 import { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa";
+import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  useGetBlogDetailsQuery,
+  usePostBlogMutation,
+  useUpdateBlogMutation,
+} from "../../../redux/features/blog/blogApi";
+import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi";
 
-const { TextArea } = Input;
 const { Text } = Typography;
-
-const dummyBlogs = [
-  {
-    id: 1,
-    title: "Registered nurse- progressive care",
-    category: "Nurse",
-    banner: "banner.jpg",
-    description:
-      "We are looking for a qualified and compassionate Registered Nurse to join our team. As a nurse in our organization, you will be responsible for providing high-quality patient care.",
-  },
-  {
-    id: 2,
-    title: "Registered nurse- progressive care",
-    category: "Nurse",
-    banner: "shejan.jpg",
-    description:
-      "We are looking for a qualified and compassionate Registered Nurse to join our team. As a nurse in our organization, you will be responsible for providing high-quality patient care.",
-  },
-  {
-    id: 3,
-    title: "Registered nurse- progressive care",
-    category: "Nurse",
-    banner: "nizam.jpg",
-    description:
-      "We are looking for a qualified and compassionate Registered Nurse to join our team. As a nurse in our organization, you will be responsible for providing high-quality patient care.",
-  },
-];
 
 export default function AddBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const [fileName, setFileName] = useState("");
+  const [description, setDescription] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const [companyLogoUrl, setCompanyLogoUrl] = useState("");
 
-  // Load default data if editing
+  const [uploadFile] = useUploadFileMutation();
+  const { data, isLoading } = useGetBlogDetailsQuery(id, { skip: !id });
+  const singleData = data?.data;
+
+  const [postBlog, { isLoading: isPosting }] = usePostBlogMutation();
+  const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation();
+
   useEffect(() => {
-    if (id) {
-      const blog = dummyBlogs.find((b) => b.id === Number(id));
-      if (blog) {
-        form.setFieldsValue({
-          description: blog.description,
-          banner: null,
-        });
-        setFileName(blog.banner);
+    if (id && singleData) {
+      form.setFieldsValue({
+        blogTitle: singleData.blogTitle,
+      });
+      setDescription(singleData.description || "");
+
+      // Set fileList from existing banner if present
+      if (singleData.banner) {
+        const filename = singleData.banner.split("/").pop();
+        setFileList([
+          {
+            uid: "-1",
+            name: filename,
+            status: "done",
+            url: `${import.meta.env.VITE_API_BASE_URL || ""}${
+              singleData.banner
+            }`,
+          },
+        ]);
+        setCompanyLogoUrl(singleData.banner);
       }
     }
-  }, [id, form]);
+  }, [id, singleData, form]);
 
-  // Upload props (just simulate upload, no real upload)
-  const uploadProps = {
-    beforeUpload: (file) => {
-      setFileName(file.name);
-      message.success(`${file.name} selected`);
-      return false; // prevent upload
-    },
-    maxCount: 1,
-    showUploadList: false,
+  const onFinish = async (values) => {
+    if (!description) {
+      message.error("Description is required");
+      return;
+    }
+
+    const payload = {
+      blogTitle: values.blogTitle,
+      description,
+      banner: companyLogoUrl,
+    };
+
+    try {
+      if (id) {
+        await updateBlog({ id, blogData: payload }).unwrap();
+        message.success("Blog updated!");
+      } else {
+        await postBlog(payload).unwrap();
+        message.success("Blog added!");
+      }
+      navigate("/blogs");
+    } catch (error) {
+      message.error("Failed to save blog");
+    }
   };
 
-  const onFinish = (values) => {
-    console.log("Form values:", values);
-    message.success(id ? "Blog updated!" : "Blog added!");
-    navigate("/blogs");
+  const onUploadChange = async ({ file, fileList: newFileList }) => {
+    setFileList(newFileList);
+
+    if (file.status === "removed") {
+      setCompanyLogoUrl("");
+      return;
+    }
+
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await uploadFile(formData).unwrap();
+
+      if (response.success && response.data?.path) {
+        setCompanyLogoUrl(response.data.path);
+      } else {
+        console.error("Upload failed: ", response.message || "No URL returned");
+        setCompanyLogoUrl("");
+      }
+    } catch (error) {
+      console.error("Upload error: ", error);
+      setCompanyLogoUrl("");
+    }
   };
 
   return (
     <div className="max-w-3xl mx-auto mt-8 px-4">
       <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold mb-6">
         <button onClick={() => navigate(-1)}>
-          {" "}
-          <FaArrowLeft />{" "}
+          <FaArrowLeft />
         </button>
         {id ? "Edit Blog" : "Add Blog"}
       </h3>
 
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item label="Banner" name="banner">
-          <Upload {...uploadProps}>
+          <Upload
+            beforeUpload={() => false}
+            onChange={onUploadChange}
+            fileList={fileList}
+            maxCount={1}
+            accept="image/*"
+            listType="picture"
+            onRemove={() => setCompanyLogoUrl("")}
+          >
             <Button icon={<UploadOutlined />}>Upload Banner</Button>
           </Upload>
-          {fileName && (
-            <Text className="ml-4" type="secondary">
-              {fileName}
-            </Text>
+          {companyLogoUrl && (
+            <Text className="ml-4 text-green-600">{companyLogoUrl}</Text>
           )}
         </Form.Item>
 
         <Form.Item
-          label="Description"
-          name="description"
-          rules={[{ required: true, message: "Please enter the description" }]}
+          label="Title"
+          name="blogTitle"
+          rules={[{ required: true, message: "Please input blog title" }]}
         >
-          <TextArea rows={6} />
+          <Input placeholder="Blog title" />
         </Form.Item>
 
+        <div className="my-4">
+          <label className="block mb-2 font-medium">Description</label>
+          <ReactQuill
+            theme="snow"
+            value={description}
+            onChange={setDescription}
+            style={{ height: 200 }}
+          />
+          {!description && (
+            <div className="text-red-600 mt-2">Description is required</div>
+          )}
+        </div>
+
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="w-full">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full"
+            loading={isPosting || isUpdating}
+          >
             Submit
           </Button>
         </Form.Item>
