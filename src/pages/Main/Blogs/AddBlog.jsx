@@ -1,5 +1,5 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, Typography, Upload } from "antd";
+import { Button, Form, Input, message, Select, Typography, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ReactQuill from "react-quill";
@@ -10,6 +10,7 @@ import {
   useUpdateBlogMutation,
 } from "../../../redux/features/blog/blogApi";
 import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi";
+import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { Text } = Typography;
 
@@ -26,13 +27,19 @@ export default function AddBlog() {
   const { data, isLoading } = useGetBlogDetailsQuery(id, { skip: !id });
   const singleData = data?.data;
 
+  console.log(singleData);
+
   const [postBlog, { isLoading: isPosting }] = usePostBlogMutation();
   const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation();
+
+  const { data: categoryV } = useGetValueQuery("Category");
+  const categoryValue = categoryV?.data;
 
   useEffect(() => {
     if (id && singleData) {
       form.setFieldsValue({
         blogTitle: singleData.blogTitle,
+        category: singleData.category,
       });
       setDescription(singleData.description || "");
 
@@ -55,6 +62,7 @@ export default function AddBlog() {
   }, [id, singleData, form]);
 
   const onFinish = async (values) => {
+    console.log(values);
     if (!description) {
       message.error("Description is required");
       return;
@@ -62,6 +70,7 @@ export default function AddBlog() {
 
     const payload = {
       blogTitle: values.blogTitle,
+      category: values.category,
       description,
       banner: companyLogoUrl,
     };
@@ -138,6 +147,20 @@ export default function AddBlog() {
           rules={[{ required: true, message: "Please input blog title" }]}
         >
           <Input placeholder="Blog title" />
+        </Form.Item>
+
+        <Form.Item
+          label="Category"
+          name="category"
+          rules={[{ required: true, message: "Please select a category" }]}
+        >
+          <Select placeholder="Select Category" style={{ width: "100%" }}>
+            {categoryValue?.map((cat) => (
+              <Option key={cat._id} value={cat.type}>
+                {cat.type}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <div className="my-12">

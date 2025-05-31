@@ -7,9 +7,9 @@ export const valueApi = baseApi.injectEndpoints({
       query: (value) => ({
         url: `/value/all/${value}`,
         method: "GET",
-        params: {
-          value,
-        },
+        // params: {
+        //   value,
+        // },
       }),
       providesTags: ["value"],
     }),

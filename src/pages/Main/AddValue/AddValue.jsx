@@ -10,7 +10,8 @@ import {
   Upload,
 } from "antd";
 import { useState } from "react";
-import { FaEdit, FaFolder, FaTrash } from "react-icons/fa";
+import { FaEdit, FaFolder } from "react-icons/fa";
+import { FiTrash2 } from "react-icons/fi";
 import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi";
 import {
   useAddValueMutation,
@@ -231,9 +232,13 @@ const AddValue = ({ type }) => {
           <Button type="primary" onClick={() => openEditModal(record)}>
             <FaEdit />
           </Button>
-          <Button type="danger" onClick={() => openDeleteModal(record.id)}>
-            <FaTrash />
-          </Button>
+          <Button
+            size="small"
+            shape="circle"
+            danger
+            icon={<FiTrash2 />}
+            onClick={() => openDeleteModal(record.id)}
+          />
         </Space>
       ),
     },
@@ -246,26 +251,25 @@ const AddValue = ({ type }) => {
           Add {type === "Category" ? "Category" : "Name"}
         </Button>
       </div>
-
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        loading={isLoading}
-        pagination={{
-          current: page,
-          pageSize: 10,
-          showSizeChanger: false,
-          onChange: (p) => setPage(p),
-        }}
-        rowKey="id"
-      />
-
+      <div className="w-[70%]">
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          loading={isLoading}
+          pagination={{
+            current: page,
+            pageSize: 10,
+            onChange: (p) => setPage(p),
+          }}
+          rowKey="id"
+        />
+      </div>
       {/* Add/Edit Modal */}
       <Modal
         title={`${isEditMode ? "Edit" : "Add"} ${
           type === "Category" ? "Category" : "Name"
         }`}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={resetModal}
         footer={null}
         centered
@@ -293,26 +297,8 @@ const AddValue = ({ type }) => {
                 listType="picture"
                 onRemove={() => setCompanyLogoUrl("")}
               >
-                <Button icon={<UploadOutlined />}>Upload Banner</Button>
+                <Button icon={<UploadOutlined />}>Upload Company Logo</Button>
               </Upload>
-              {companyLogoUrl && !fileList.length && (
-                <img
-                  src={
-                    baseImageUrl + companyLogoUrl.startsWith("http")
-                      ? companyLogoUrl
-                      : companyLogoUrl
-                  }
-                  alt="uploaded icon"
-                  style={{
-                    marginTop: 16,
-                    width: 48,
-                    height: 48,
-                    objectFit: "contain",
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                  }}
-                />
-              )}
             </Form.Item>
           )}
 
@@ -329,28 +315,16 @@ const AddValue = ({ type }) => {
 
       {/* Delete Confirmation Modal */}
       <Modal
-        title="Delete Confirmation"
+        title="Confirm Delete"
         open={isDeleteModalVisible}
+        onOk={handleDelete}
         onCancel={() => setIsDeleteModalVisible(false)}
-        footer={[
-          <Button key="cancel" onClick={() => setIsDeleteModalVisible(false)}>
-            Cancel
-          </Button>,
-          <Button
-            key="delete"
-            type="danger"
-            onClick={handleDelete}
-            loading={isDeleting}
-          >
-            Delete
-          </Button>,
-        ]}
+        okText="Delete"
+        loading={isDeleting}
+        okButtonProps={{ danger: true }}
         centered
       >
-        <p>
-          Are you sure you want to delete this{" "}
-          {type === "Category" ? "category" : "name"}?
-        </p>
+        <p>Are you sure you want to delete this?</p>
       </Modal>
     </>
   );

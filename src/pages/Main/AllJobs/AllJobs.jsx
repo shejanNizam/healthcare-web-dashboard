@@ -1,12 +1,14 @@
 import { Button, message, Modal, Pagination, Tooltip } from "antd";
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaHospital, FaPlus } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import {
   useDeleteJobMutation,
   useGetJobsQuery,
 } from "../../../redux/features/jobs/jobsApi";
+
+const baseImageUrl = import.meta.env.VITE_IMAGE_URL;
 
 export default function AllJobs() {
   const navigate = useNavigate();
@@ -73,21 +75,17 @@ export default function AllJobs() {
             }}
           >
             {/* Left Icon */}
-            <div
-              style={{
-                backgroundColor: "#3083DC",
-                color: "white",
-                borderRadius: "50%",
-                width: 50,
-                height: 50,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: 24,
-              }}
-            >
-              🏥
-            </div>
+            <img
+              src={
+                job.companyLogo ? (
+                  baseImageUrl + job.companyLogo
+                ) : (
+                  <FaHospital className="w-6 h-6" />
+                )
+              }
+              alt={job.hospitalName}
+              className="rounded-full w-8 h-8 object-cover "
+            />
 
             {/* Job Info */}
             <div style={{ flex: 1 }}>
@@ -195,7 +193,7 @@ export default function AllJobs() {
         okButtonProps={{ danger: true }}
         centered
       >
-        <p>Are you sure you want to delete this blog?</p>
+        <p>Are you sure you want to delete this job?</p>
       </Modal>
     </>
   );
