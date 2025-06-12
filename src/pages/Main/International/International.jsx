@@ -17,6 +17,8 @@ export default function International() {
     isError,
   } = useGetInternationalApplicantQuery({ page, date });
 
+  console.log(apiData?.data?.jobs);
+
   const handleDateChange = (date, dateString) => {
     setDate(dateString);
     setPage(1);

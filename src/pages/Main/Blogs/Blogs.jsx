@@ -3,6 +3,7 @@ import {
   Card,
   Modal,
   Pagination,
+  Spin,
   Tooltip,
   Typography,
   message,
@@ -63,6 +64,14 @@ export default function Blogs() {
     setPage(pageNumber);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="max-w-6xl mx-auto mt-8 px-4">
@@ -74,9 +83,6 @@ export default function Blogs() {
             Add <FaPlus />
           </Button>
         </div>
-
-        {isLoading && <p>Loading blogs...</p>}
-        {isError && <p>Error loading blogs.</p>}
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {blogs.map((blog) => (

@@ -2,6 +2,7 @@ import { Button, Checkbox, Input } from "antd";
 import Form from "antd/es/form/Form";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import main_logo from "../../assets/images/healthcare_main_logo.svg";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { setLogin } from "../../redux/slices/authSlice";
 import { ErrorSwal, SuccessSwal } from "../../utils/allSwalFire";
@@ -47,8 +48,7 @@ const SignIn = () => {
       <div className="lg:border-r-2 border-gray mx-auto w-[70%]  lg:p-[25%] lg:pr-[25%]">
         {/* <img src={logo_image} alt="App Logo" /> */}
         <div className=" flex justify-center items-center text-primary text-3xl font-bold">
-          {/* <img className="w-[70%] mx-auto" src={logo} alt="Logo" /> */}
-          Clement
+          <img className="w-[90%] mx-auto" src={main_logo} alt="Logo" />
         </div>
       </div>
 
