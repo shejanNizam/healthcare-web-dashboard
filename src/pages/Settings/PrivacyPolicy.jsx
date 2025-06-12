@@ -7,6 +7,7 @@ const PrivacyPolicy = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useGetPrivacyQuery();
+  console.log(data);
 
   return (
     <div className="min-h-[70vh] flex flex-col justify-between">

@@ -7,6 +7,7 @@ const TermsConditions = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useGetTermsQuery();
+  console.log(data);
 
   return (
     <div className="min-h-[70vh] flex flex-col justify-between">

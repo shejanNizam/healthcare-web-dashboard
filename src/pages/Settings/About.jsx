@@ -7,6 +7,7 @@ const About = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useGetAboutQuery();
+  console.log(data);
 
   return (
     <div className="min-h-[70vh] flex flex-col justify-between">
