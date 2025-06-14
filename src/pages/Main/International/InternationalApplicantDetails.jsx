@@ -9,6 +9,8 @@ export default function InternationalApplicantDetails() {
   const { data, isLoading, isError } =
     useGetInternationalApplicantDetailsQuery(id);
 
+  console.log(data?.data);
+
   const handleBack = () => {
     navigate(-1);
   };
@@ -47,7 +49,7 @@ export default function InternationalApplicantDetails() {
 
   // Helper to format dates (simple YYYY-MM-DD)
   const formatDate = (dateStr) => {
-    if (!dateStr) return "-";
+    if (!dateStr) return "N/A";
     return new Date(dateStr).toLocaleDateString();
   };
 
@@ -86,31 +88,31 @@ export default function InternationalApplicantDetails() {
           <div className="mb-6 space-y-2">
             <div>
               <span className="font-medium">Full Name: </span>
-              {personalInfo.fullName || "-"}
+              {personalInfo.fullName || "N/A"}
             </div>
             <div>
               <span className="font-medium">Email: </span>
-              {personalInfo.email || "-"}
+              {personalInfo.email || "N/A"}
             </div>
             <div>
-              <span className="font-medium">Phone no.: </span>
-              {personalInfo.phoneNo || "-"}
+              <span className="font-medium">Phone no: </span>
+              {personalInfo.phone || "N/A"}
             </div>
             <div>
               <span className="font-medium">Gender: </span>
-              {personalInfo.gender || "-"}
+              {personalInfo.gender || "N/A"}
             </div>
             <div>
               <span className="font-medium">Country: </span>
-              {personalInfo.country || "-"}
+              {personalInfo.country || "N/A"}
             </div>
             <div>
               <span className="font-medium">State: </span>
-              {personalInfo.state || "-"}
+              {personalInfo.state || "N/A"}
             </div>
             <div>
               <span className="font-medium">City: </span>
-              {personalInfo.city || "-"}
+              {personalInfo.city || "N/A"}
             </div>
           </div>
 
@@ -119,19 +121,19 @@ export default function InternationalApplicantDetails() {
             <div className="space-y-2">
               <div>
                 <span className="font-medium">Profession: </span>
-                {personalInfo.profession || "-"}
+                {personalInfo.profession || "N/A"}
               </div>
               <div>
                 <span className="font-medium">Discipline: </span>
-                {personalInfo.discipline || "-"}
+                {personalInfo.discipline || "N/A"}
               </div>
               <div>
                 <span className="font-medium">Specialty: </span>
-                {personalInfo.specialty || "-"}
+                {personalInfo.specialty || "N/A"}
               </div>
               <div>
                 <span className="font-medium">Secondary specialty: </span>
-                {personalInfo.secondarySpecialty || "-"}
+                {personalInfo.secondarySpecialty || "N/A"}
               </div>
             </div>
           </div>
@@ -155,19 +157,19 @@ export default function InternationalApplicantDetails() {
                 <div key={license._id} className="mb-2 border p-2 rounded">
                   <div>
                     <span className="font-medium">License Type: </span>
-                    {license.license_type || "-"}
+                    {license.license_type || "N/A"}
                   </div>
                   <div>
                     <span className="font-medium">Medical Assistant: </span>
-                    {license.medical_assistant || "-"}
+                    {license.medical_assistant || "N/A"}
                   </div>
                   <div>
                     <span className="font-medium">City: </span>
-                    {license.city || "-"}
+                    {license.city || "N/A"}
                   </div>
                   <div>
                     <span className="font-medium">State: </span>
-                    {license.state || "-"}
+                    {license.state || "N/A"}
                   </div>
                 </div>
               ))
@@ -200,27 +202,27 @@ export default function InternationalApplicantDetails() {
               <div key={edu._id} className="mb-4 border p-3 rounded">
                 <div>
                   <span className="font-medium">School/Program: </span>
-                  {edu.school || "-"}
+                  {edu.school || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Graduation Year: </span>
-                  {edu.year || "-"}
+                  {edu.year || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Degree: </span>
-                  {edu.degree || "-"}
+                  {edu.degree || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Major: </span>
-                  {edu.major || "-"}
+                  {edu.major || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Country: </span>
-                  {edu.country || "-"}
+                  {edu.country || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">City: </span>
-                  {edu.city || "-"}
+                  {edu.city || "N/A"}
                 </div>
               </div>
             ))
@@ -240,23 +242,23 @@ export default function InternationalApplicantDetails() {
               <div key={job._id} className="mb-4 border p-3 rounded">
                 <div>
                   <span className="font-medium">Company Name: </span>
-                  {job.company || "-"}
+                  {job.company || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Specialty: </span>
-                  {job.specialty || "-"}
+                  {job.specialty || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Country: </span>
-                  {job.country || "-"}
+                  {job.country || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">State: </span>
-                  {job.state || "-"}
+                  {job.state || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">City: </span>
-                  {job.city || "-"}
+                  {job.city || "N/A"}
                 </div>
                 <div>
                   <span className="font-medium">Start Date: </span>

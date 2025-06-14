@@ -38,9 +38,10 @@ export default function International() {
       id: job._id,
       userName: job.name,
       email: job.email,
-      phone: job.phoneNo ? job.phoneNo : "N/A",
+      phone: job.phone ? job.phone : "N/A",
     })) || [];
 
+  console.log(tableData);
   // Pagination total items from API (totalData)
   const totalItems = apiData?.data?.pagination?.totalData || 0;
 

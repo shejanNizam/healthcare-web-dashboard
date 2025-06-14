@@ -21,6 +21,8 @@ export default function AllApplicants() {
 
   const { data, isLoading } = useGetJobApplicantsQuery({ id, page, date });
 
+  console.log(data?.data?.applicants);
+
   // const applicants = data?.data?.applicants || [];
   const totalItems = data?.data?.pagination?.totalData || 0;
 
@@ -46,8 +48,8 @@ export default function AllApplicants() {
     },
     {
       title: "Phone No.",
-      dataIndex: "phoneNo",
-      key: "phoneNo",
+      dataIndex: "phone",
+      key: "phone",
       align: "center",
     },
     {
@@ -128,6 +130,9 @@ export default function AllApplicants() {
               ...applicant?.parsonal_info,
               key: applicant._id,
               _id: applicant._id,
+              phone: applicant?.parsonal_info?.phone
+                ? applicant?.parsonal_info?.phone
+                : "N/A",
             })) || []
           }
           pagination={false}
