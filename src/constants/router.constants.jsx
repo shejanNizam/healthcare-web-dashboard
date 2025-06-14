@@ -139,16 +139,16 @@ export const dashboardItems = [
         path: "settings/profile/edit",
         element: <EditMyProfile />,
       },
-      {
-        name: "About Us",
-        icon: FaServicestack,
-        path: "settings/about-us",
-        element: <About />,
-      },
-      {
-        path: "settings/about-us/edit",
-        element: <EditAbout />,
-      },
+      // {
+      //   name: "About Us",
+      //   icon: FaServicestack,
+      //   path: "settings/about-us",
+      //   element: <About />,
+      // },
+      // {
+      //   path: "settings/about-us/edit",
+      //   element: <EditAbout />,
+      // },
       {
         name: "Terms & Services",
         icon: TbAirConditioning,

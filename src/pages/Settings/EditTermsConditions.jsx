@@ -20,8 +20,10 @@ const EditTermsConditions = () => {
   const placeholder = "Enter your about us content here...";
 
   useEffect(() => {
-    if (data?.data?.description) {
-      setDescription(data.data.description);
+    // if (data?.data?.description) {
+    if (data?.data[0]?.description) {
+      // setDescription(data.data.description);
+      setDescription(data?.data[0]?.description || "");
     }
   }, [data]);
 

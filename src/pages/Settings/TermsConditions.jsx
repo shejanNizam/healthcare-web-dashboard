@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import PageHeading from "../../Components/PageHeading";
 import { useGetTermsQuery } from "../../redux/features/setting/settingApi";
@@ -7,7 +7,7 @@ const TermsConditions = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useGetTermsQuery();
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className="min-h-[70vh] flex flex-col justify-between">
@@ -20,17 +20,18 @@ const TermsConditions = () => {
 
         <div className="w-full bg-white rounded-2xl min-h-[60vh]">
           <div className="w-full bg-white rounded-2xl min-h-[60vh] p-5">
-            {/* {isLoading ? (
+            {isLoading ? (
               <div className="h-[60vh] w-full flex justify-center items-center">
                 <Spin size="large" />
               </div>
             ) : (
               <div
                 className="no-tailwind"
-                dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                // dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                dangerouslySetInnerHTML={{ __html: data?.data[0]?.description }}
               />
-            )} */}
-            <h3> Static Terms & Condition </h3>
+            )}
+            {/* <h3> Static Terms & Condition </h3> */}
           </div>
         </div>
 

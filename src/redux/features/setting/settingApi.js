@@ -14,7 +14,7 @@ export const settingsApi = baseApi.injectEndpoints({
     updateAbout: builder.mutation({
       query: ({ data }) => ({
         url: `/about/update`,
-        method: "PATCH",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: ["settings"],
@@ -34,7 +34,7 @@ export const settingsApi = baseApi.injectEndpoints({
     updateTerms: builder.mutation({
       query: ({ data }) => ({
         url: `/terms/update`,
-        method: "PATCH",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: ["settings"],
@@ -53,7 +53,7 @@ export const settingsApi = baseApi.injectEndpoints({
     updatePrivacy: builder.mutation({
       query: ({ data }) => ({
         url: `/privacy/update`,
-        method: "PATCH",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: ["settings"],
