@@ -90,8 +90,8 @@ export default function AllApplicantsDetails() {
               {personalInfo.email || "N/A"}
             </div>
             <div>
-              <span className="font-medium">Phone no.: </span>
-              {personalInfo.phoneNo || "N/A"}
+              <span className="font-medium">Phone no: </span>
+              {personalInfo.phone || "N/A"}
             </div>
             <div>
               <span className="font-medium">Gender: </span>
