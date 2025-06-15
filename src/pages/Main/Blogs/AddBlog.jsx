@@ -1,5 +1,14 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, Select, Typography, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Select,
+  Spin,
+  Typography,
+  Upload,
+} from "antd";
 import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ReactQuill from "react-quill";
@@ -14,6 +23,8 @@ import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { Text } = Typography;
 
+const baseImageUrl = import.meta.env.VITE_IMAGE_URL || "";
+
 export default function AddBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,8 +37,6 @@ export default function AddBlog() {
   const [uploadFile] = useUploadFileMutation();
   const { data, isLoading } = useGetBlogDetailsQuery(id, { skip: !id });
   const singleData = data?.data;
-
-  console.log(singleData);
 
   const [postBlog, { isLoading: isPosting }] = usePostBlogMutation();
   const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation();
@@ -51,9 +60,7 @@ export default function AddBlog() {
             uid: "-1",
             name: filename,
             status: "done",
-            url: `${import.meta.env.VITE_API_BASE_URL || ""}${
-              singleData.banner
-            }`,
+            url: `${baseImageUrl || ""}${singleData.banner}`,
           },
         ]);
         setCompanyLogoUrl(singleData.banner);
@@ -85,7 +92,8 @@ export default function AddBlog() {
       }
       navigate("/blogs");
     } catch (error) {
-      message.error("Failed to save blog");
+      console.log(error);
+      message.error(error?.data?.message || "Something went wrong!");
     }
   };
 
@@ -116,6 +124,14 @@ export default function AddBlog() {
       setCompanyLogoUrl("");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto mt-8 px-4">

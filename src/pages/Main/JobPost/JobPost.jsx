@@ -29,6 +29,8 @@ import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { Option } = Select;
 
+const baseImageUrl = import.meta.env.VITE_IMAGE_URL || "";
+
 export default function JobPost() {
   const { id } = useParams();
   const [form] = Form.useForm();
@@ -38,7 +40,7 @@ export default function JobPost() {
   const [summary, setSummary] = useState("");
   const [fileList, setFileList] = useState([]);
   const [companyLogoUrl, setCompanyLogoUrl] = useState("");
-  console.log(companyLogoUrl);
+  // console.log(companyLogoUrl);
 
   const [uploadFile] = useUploadFileMutation();
   const { data: categoryV } = useGetValueQuery("Category");
@@ -96,7 +98,7 @@ export default function JobPost() {
             uid: "-1",
             name: "company-logo.jpg",
             status: "done",
-            url: singleJobDetails.companyLogo,
+            url: baseImageUrl + singleJobDetails.companyLogo,
           },
         ]);
       } else {
@@ -352,7 +354,7 @@ export default function JobPost() {
 
           <Form.List name="responsibilities">
             {(fields, { add, remove }) => (
-              <Col span={24} className="mb-8">
+              <Col span={24} className="my-8">
                 <h3 className="text-xl text-primary font-bold mb-4">
                   Responsibilities
                 </h3>
@@ -406,7 +408,7 @@ export default function JobPost() {
 
           <Form.List name="requirements">
             {(fields, { add, remove }) => (
-              <Col span={24} className="mb-8">
+              <Col span={24} className="my-8">
                 <h3 className="text-xl text-primary font-bold mb-4">
                   Requirements
                 </h3>
@@ -519,7 +521,7 @@ export default function JobPost() {
             )}
           </Col>
 
-          <Col span={24} className="mb-8">
+          <Col span={24} className="my-8">
             <Form.Item label="Company Logo" name="companyLogo">
               <Upload
                 beforeUpload={() => false}

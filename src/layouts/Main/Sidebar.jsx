@@ -3,7 +3,7 @@ import { BiLogOut } from "react-icons/bi";
 import { MdOutlineArrowRight } from "react-icons/md";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import logo from "../../assets/images/mail_logo_img.svg";
+import main_logo from "../../assets/images/healthcare_main_logo.svg";
 import { dashboardItems } from "../../constants/router.constants";
 import { cn } from "../../lib/utils";
 import { logout } from "../../redux/slices/authSlice";
@@ -63,7 +63,7 @@ const Sidebar = () => {
         {/* Logo */}
         <div className=" flex justify-center items-center text-primary text-3xl font-bold">
           {/* <img className="w-[70%] mx-auto" src={logo} alt="Logo" /> */}
-          Clement
+          <img className="w-[60%] mx-auto" src={main_logo} alt="Logo" />
         </div>
 
         {/* Navigation Links */}
