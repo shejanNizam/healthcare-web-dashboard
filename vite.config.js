@@ -3,6 +3,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  preview: {
+    allowedHosts: ["dashboard.cenmhealthcare.com"],
+  },
 });
 
 // export default defineConfig({
