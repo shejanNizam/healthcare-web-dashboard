@@ -31,9 +31,10 @@ export default function ContactList() {
               bodyStyle={{ padding: "16px" }}
               hoverable
             >
-              <div className="flex justify-between font-semibold text-base mb-2">
+              <div className="flex justify-between text-wrap font-semibold text-base mb-2">
                 <Text>User name : {contact.name}</Text>
                 <Text>Email : {contact.email}</Text>
+                <Text>Phone : {contact.phone ? contact.phone : "N/A"}</Text>
               </div>
               <Paragraph
                 className="text-sm mb-4"

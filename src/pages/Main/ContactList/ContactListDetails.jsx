@@ -30,10 +30,11 @@ export default function ContactListDetails() {
         &lt; Contact Details
       </Button>
 
-      <Card className="bg-blue-50 p-6" bordered={false}>
+      <Card className="bg-blue-50 p-6">
         <div className="flex justify-between font-semibold mb-6 text-base">
           <Text>Name: {contact.name}</Text>
           <Text>Email: {contact.email}</Text>
+          <Text>Phone: {contact.phone ? contact.phone : "N/A"}</Text>
         </div>
         <Paragraph className="text-sm whitespace-pre-wrap">
           {contact.description}
