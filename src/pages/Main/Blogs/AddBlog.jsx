@@ -48,7 +48,9 @@ export default function AddBlog() {
     if (id && singleData) {
       form.setFieldsValue({
         blogTitle: singleData.blogTitle,
+        blogAlias: singleData.blogAlias,
         category: singleData.category,
+        tags: singleData.tags,
       });
       setDescription(singleData.description || "");
 
@@ -77,7 +79,9 @@ export default function AddBlog() {
 
     const payload = {
       blogTitle: values.blogTitle,
+      blogAlias: values.blogAlias,
       category: values.category,
+      tags: values.tags,
       description,
       banner: companyLogoUrl,
     };
@@ -134,8 +138,8 @@ export default function AddBlog() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 px-4">
-      <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold mb-6">
+    <div className="max-w-3xl mx-auto mt-8 px-4 border shadow-sm rounded-lg">
+      <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold my-6">
         <button onClick={() => navigate(-1)}>
           <FaArrowLeft />
         </button>
@@ -158,11 +162,19 @@ export default function AddBlog() {
         </Form.Item>
 
         <Form.Item
-          label="Title"
+          label="Blog Title"
           name="blogTitle"
           rules={[{ required: true, message: "Please input blog title" }]}
         >
           <Input placeholder="Blog title" />
+        </Form.Item>
+
+        <Form.Item
+          label="Blog Alias"
+          name="blogAlias"
+          rules={[{ required: true, message: "Please input blog alias" }]}
+        >
+          <Input placeholder="Blog alias" />
         </Form.Item>
 
         <Form.Item
@@ -171,6 +183,24 @@ export default function AddBlog() {
           rules={[{ required: true, message: "Please select a category" }]}
         >
           <Select placeholder="Select Category" style={{ width: "100%" }}>
+            {categoryValue?.map((cat) => (
+              <Option key={cat._id} value={cat.type}>
+                {cat.type}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Tags"
+          name="tags"
+          rules={[{ required: true, message: "Please select tags" }]}
+        >
+          <Select
+            mode="multiple"
+            placeholder="Select Tags"
+            style={{ width: "100%" }}
+          >
             {categoryValue?.map((cat) => (
               <Option key={cat._id} value={cat.type}>
                 {cat.type}
