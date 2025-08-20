@@ -31,6 +31,7 @@ export default function AddBlog() {
   const [form] = Form.useForm();
 
   const [description, setDescription] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
   const [fileList, setFileList] = useState([]);
   const [companyLogoUrl, setCompanyLogoUrl] = useState("");
 
@@ -51,8 +52,11 @@ export default function AddBlog() {
         blogAlias: singleData.blogAlias,
         category: singleData.category,
         tags: singleData.tags,
+        page_title: singleData.page_title,
+        url_handle: singleData.url_handle,
       });
       setDescription(singleData.description || "");
+      setMetaDescription(singleData.metaDescription || "");
 
       // Set fileList from existing banner if present
       if (singleData.banner) {
@@ -78,13 +82,17 @@ export default function AddBlog() {
     }
 
     const payload = {
+      banner: companyLogoUrl,
       blogTitle: values.blogTitle,
       blogAlias: values.blogAlias,
       category: values.category,
       tags: values.tags,
       description,
-      banner: companyLogoUrl,
+      page_title: values.page_title,
+      metaDescription,
+      url_handle: values.url_handle,
     };
+    console.log(payload);
 
     try {
       if (id) {
@@ -221,6 +229,55 @@ export default function AddBlog() {
             <div className="text-red-600 mt-2">Description is required</div>
           )}
         </div>
+
+        {/* search engine lsiting */}
+        <h1 className="text-2xl font-bold pb-6">Search Engine Listing</h1>
+
+        <h3 className="text-xl text-primary ">Cenmhealthcare</h3>
+        <p className="text-primary text-xs pb-6">https//: cenmhealtcare.com</p>
+        {/* <link className="" rel="stylesheet" href="https//: cenmhealtcare.com" /> */}
+        <p className="text-primary text-xl font-semibold pb-2">
+          Staff for hospitals, clinics, and care homes across the UK.
+        </p>
+        <p className="pb-6">
+          Reliable healthcare staffing agency providing qualified nurses,
+          caregivers, and medical staff for hospitals, clinics, and care homes
+          across the UK.
+        </p>
+
+        {/* paeg title */}
+        <Form.Item
+          label="Page Title"
+          name="page_title"
+          rules={[{ required: true, message: "Please input page title" }]}
+        >
+          <Input placeholder="page title input here" />
+        </Form.Item>
+
+        {/* meta descrition */}
+        <div className="my-12">
+          <label className="block mb-2 font-medium">Meta Description</label>
+          <ReactQuill
+            theme="snow"
+            value={metaDescription}
+            onChange={setMetaDescription}
+            style={{ height: 200 }}
+          />
+          {!metaDescription && (
+            <div className="text-red-600 mt-2">
+              Meta Description is required
+            </div>
+          )}
+        </div>
+
+        {/* url handler */}
+        <Form.Item
+          label="Url handle"
+          name="url_handle"
+          rules={[{ required: true, message: "Please input Url handle" }]}
+        >
+          <Input placeholder="Url handle input here" />
+        </Form.Item>
 
         <Form.Item>
           <Button
