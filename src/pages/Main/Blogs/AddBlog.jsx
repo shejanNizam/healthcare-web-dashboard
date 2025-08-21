@@ -21,6 +21,7 @@ import {
 import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi";
 import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
+const { TextArea } = Input;
 const { Text } = Typography;
 
 const baseImageUrl = import.meta.env.VITE_IMAGE_URL || "";
@@ -248,14 +249,14 @@ export default function AddBlog() {
         {/* paeg title */}
         <Form.Item
           label="Page Title"
-          name="page_title"
+          name="pageTitle"
           rules={[{ required: true, message: "Please input page title" }]}
         >
           <Input placeholder="page title input here" />
         </Form.Item>
 
         {/* meta descrition */}
-        <div className="my-12">
+        {/* <div className="my-12">
           <label className="block mb-2 font-medium">Meta Description</label>
           <ReactQuill
             theme="snow"
@@ -268,7 +269,15 @@ export default function AddBlog() {
               Meta Description is required
             </div>
           )}
-        </div>
+        </div> */}
+
+        {/* meta descrition */}
+        <Form.Item name="metaDescription" label="Meta description">
+          <TextArea
+            rows={3}
+            placeholder="Enter meta description for search engines"
+          />
+        </Form.Item>
 
         {/* url handler */}
         <Form.Item

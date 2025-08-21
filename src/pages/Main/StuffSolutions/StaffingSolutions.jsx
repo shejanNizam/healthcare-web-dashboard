@@ -10,6 +10,7 @@ import {
   message,
 } from "antd";
 import { useState } from "react";
+import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -19,7 +20,7 @@ export default function StaffingSolutions() {
   const [faqForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingFaqIndex, setEditingFaqIndex] = useState(null);
+  //   const [editingFaqIndex, setEditingFaqIndex] = useState(null);
 
   const [faqs, setFaqs] = useState([
     {
@@ -53,6 +54,9 @@ export default function StaffingSolutions() {
     },
   ]);
 
+  const { data: categoryV } = useGetValueQuery("Category");
+  const categoryValue = categoryV?.data;
+
   // Mock API call function
   const submitToAPI = async (data) => {
     // Simulate API delay
@@ -76,13 +80,11 @@ export default function StaffingSolutions() {
 
   const handleSubmit = async (values) => {
     setLoading(true);
+    console.log(values);
 
     try {
-      // Prepare the payload with all form data including FAQs
       const payload = {
         ...values,
-        faqs: faqs,
-        submittedAt: new Date().toISOString(),
       };
 
       console.log("Submitting payload:", payload);
@@ -105,15 +107,15 @@ export default function StaffingSolutions() {
 
   const showModal = () => {
     setIsModalVisible(true);
-    setEditingFaqIndex(null);
+    // setEditingFaqIndex(null);
     faqForm.resetFields();
   };
 
-  const handleEditFaq = (index) => {
-    setEditingFaqIndex(index);
-    setIsModalVisible(true);
-    faqForm.setFieldsValue(faqs[index]);
-  };
+  //   const handleEditFaq = (index) => {
+  //     setEditingFaqIndex(index);
+  //     setIsModalVisible(true);
+  //     faqForm.setFieldsValue(faqs[index]);
+  //   };
 
   const handleDeleteFaq = (index) => {
     Modal.confirm({
@@ -129,39 +131,14 @@ export default function StaffingSolutions() {
     });
   };
 
-  const handleModalOk = () => {
-    faqForm.validateFields().then((values) => {
-      if (editingFaqIndex !== null) {
-        // Edit existing FAQ
-        const updatedFaqs = [...faqs];
-        updatedFaqs[editingFaqIndex] = values;
-        setFaqs(updatedFaqs);
-        message.success("FAQ updated successfully");
-      } else {
-        // Add new FAQ
-        setFaqs([...faqs, values]);
-        message.success("FAQ added successfully");
-      }
-      setIsModalVisible(false);
-      faqForm.resetFields();
-    });
+  const handleFaqModalSubmit = (values) => {
+    console.log(values);
+    setIsModalVisible(false);
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
     faqForm.resetFields();
-  };
-
-  const uploadProps = {
-    name: "file",
-    multiple: true,
-    beforeUpload: (file) => {
-      // Prevent automatic upload, handle files manually
-      return false;
-    },
-    onChange(info) {
-      console.log("Upload info:", info);
-    },
   };
 
   return (
@@ -316,21 +293,29 @@ export default function StaffingSolutions() {
                   </div>
                 </div>
 
-                {/* Tags */}
-                <Form.Item name="tags" label="Tags">
+                <Form.Item
+                  label="Tags"
+                  name="tags"
+                  rules={[{ required: true, message: "Please select tags" }]}
+                >
                   <Select
-                    mode="tags"
                     size="large"
-                    placeholder="Add tags (press enter to add)"
+                    mode="multiple"
+                    placeholder="Select Tags"
                     style={{ width: "100%" }}
-                  />
+                  >
+                    {categoryValue?.map((cat) => (
+                      <Option key={cat._id} value={cat.type}>
+                        {cat.type}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
 
                 <Divider />
 
                 {/* Search Engine Listing */}
-
-                <h1 className="text-2xl font-bold pb-6">
+                <h1 className="text-2xl font-bold pb-2">
                   Search Engine Listing
                 </h1>
 
@@ -339,7 +324,7 @@ export default function StaffingSolutions() {
                   https//: cenmhealtcare.com
                 </p>
                 {/* <link className="" rel="stylesheet" href="https//: cenmhealtcare.com" /> */}
-                <p className="text-primary text-xl font-semibold pb-2">
+                <p className="text-primary text-xl font-semibold">
                   Staff for hospitals, clinics, and care homes across the UK.
                 </p>
                 <p className="pb-6">
@@ -349,22 +334,40 @@ export default function StaffingSolutions() {
                 </p>
 
                 {/* paeg title */}
-                <Form.Item name="pageTitle" label="Page title">
+                <Form.Item
+                  label="Page title"
+                  name="pageTitle"
+                  rules={[
+                    { required: true, message: "Please input page title" },
+                  ]}
+                >
                   <Input placeholder="Enter page title" size="large" />
                 </Form.Item>
                 {/* meta descrition */}
-                <Form.Item name="metaDescription" label="Meta description">
+                <Form.Item
+                  name="metaDescription"
+                  label="Meta description"
+                  rules={[
+                    { required: true, message: "Please input metadescription" },
+                  ]}
+                >
                   <TextArea
-                    rows={3}
+                    rows={5}
                     placeholder="Enter meta description for search engines"
                   />
                 </Form.Item>
                 {/* url handler */}
-                <Form.Item name="urlHandle" label="URL handle">
+                <Form.Item
+                  name="urlHandle"
+                  label="URL handle"
+                  rules={[
+                    { required: true, message: "Please input urlHandle" },
+                  ]}
+                >
                   <Input
                     placeholder="Enter URL handle"
                     size="large"
-                    addonBefore="https://yoursite.com/services/"
+                    addonBefore="https://cenmhealthcare.com/blogs/"
                   />
                 </Form.Item>
 
@@ -375,7 +378,7 @@ export default function StaffingSolutions() {
                     htmlType="submit"
                     size="large"
                     loading={loading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-base font-medium"
+                    className="w-full bg-primary hover:bg-primary/80 h-12 text-base font-medium"
                     block
                   >
                     {loading ? "Submitting..." : "Submit"}
@@ -388,16 +391,24 @@ export default function StaffingSolutions() {
       </div>
 
       {/* FAQ Modal */}
+
       <Modal
-        title={editingFaqIndex !== null ? "Edit FAQ" : "Add FAQ"}
+        // title={editingFaqIndex !== null ? "Edit FAQ" : "Add FAQ"}
+        title={"Add FAQ"}
         open={isModalVisible}
-        onOk={handleModalOk}
         onCancel={handleModalCancel}
-        okText={editingFaqIndex !== null ? "Update" : "Add"}
-        cancelText="Cancel"
+        // okText={editingFaqIndex !== null ? "Update" : "Add"}
+        // cancelText="Cancel"
+        footer={null}
+        centered
         width={600}
       >
-        <Form form={faqForm} layout="vertical" className="mt-4">
+        <Form
+          form={faqForm}
+          layout="vertical"
+          className="mt-4"
+          onFinish={handleFaqModalSubmit}
+        >
           <Form.Item
             name="question"
             label="Question"
@@ -413,6 +424,21 @@ export default function StaffingSolutions() {
           >
             <TextArea rows={4} placeholder="Enter the answer" />
           </Form.Item>
+
+          {/* Submit Button */}
+          <div className="pt-6">
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              //   loading={loading}
+              className="w-full bg-primary hover:bg-primary/80 h-12 text-base font-medium"
+              block
+            >
+              {/* {loading ? "Submitting..." : "Submit"} */}
+              Submit
+            </Button>
+          </div>
         </Form>
       </Modal>
     </div>
