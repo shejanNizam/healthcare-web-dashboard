@@ -1,6 +1,5 @@
 import { CiSettings, CiUser } from "react-icons/ci";
 import { FaBasketballBall } from "react-icons/fa";
-import { FaServicestack } from "react-icons/fa6";
 import { MdOutlineSecurityUpdateWarning } from "react-icons/md";
 import { PiUsersThree } from "react-icons/pi";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
@@ -21,10 +20,10 @@ import InternationalApplicantDetails from "../pages/Main/International/Internati
 import JobPost from "../pages/Main/JobPost/JobPost";
 import JobPostPreview from "../pages/Main/JobPost/JobPostPreview";
 import Notifications from "../pages/Main/Notifications/Notifications";
+import StaffingSolutions from "../pages/Main/StuffSolutions/StaffingSolutions";
+import WorkforceManagement from "../pages/Main/StuffSolutions/WorkforceManagement";
 import EditMyProfile from "../pages/Profile/EditMyProfile";
 import MyProfile from "../pages/Profile/MyProfile";
-import About from "../pages/Settings/About";
-import EditAbout from "../pages/Settings/EditAbout";
 import EditPrivacyPolicy from "../pages/Settings/EditPrivacyPolicy";
 import EditTermsConditions from "../pages/Settings/EditTermsConditions";
 import PrivacyPolicy from "../pages/Settings/PrivacyPolicy";
@@ -123,6 +122,25 @@ export const dashboardItems = [
   {
     path: "contact-list/:id",
     element: <ContactListDetails />,
+  },
+  {
+    name: "Stuff Solutions",
+    rootPath: "stuff-solutions",
+    icon: CiSettings,
+    children: [
+      {
+        name: "Staffing Solutions",
+        path: "stuff-solutions/staffing-solutions",
+        icon: CiUser,
+        element: <StaffingSolutions />,
+      },
+      {
+        name: "Workforce Manage",
+        icon: TbAirConditioning,
+        path: "stuff-solutions/workforce-management",
+        element: <WorkforceManagement />,
+      },
+    ],
   },
   {
     name: "Settings",
