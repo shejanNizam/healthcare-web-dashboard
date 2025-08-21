@@ -10,12 +10,16 @@ import {
   message,
 } from "antd";
 import { useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 export default function AddEditForm() {
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [form] = Form.useForm();
   const [faqForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -149,9 +153,14 @@ export default function AddEditForm() {
           <div className="lg:col-span-2 space-y-6">
             {/* Service Details Section */}
             <Card className="shadow-sm">
-              <h2 className="text-xl font-semibold text-primary mb-4">
-                Nsrsing and Allied health
-              </h2>
+              <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold my-6">
+                <button onClick={() => navigate(-1)}>
+                  <FaArrowLeft />
+                </button>
+                {id
+                  ? "Edit Nsrsing and Allied health"
+                  : "Add Nsrsing and Allied health"}
+              </h3>
 
               <Form
                 form={form}
