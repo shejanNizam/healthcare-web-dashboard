@@ -55,8 +55,8 @@ export default function JobPost() {
   });
   const singleJobDetails = singleJobD?.data;
 
-  const [postJob] = usePostJobMutation();
-  const [updateJob] = useUpdateJobMutation();
+  const [postJob, { isLoading: isLoadingPost }] = usePostJobMutation();
+  const [updateJob, { isLoading: isLoadingUpdate }] = useUpdateJobMutation();
 
   // Populate form when job details loaded
   useEffect(() => {
@@ -541,6 +541,7 @@ export default function JobPost() {
             style={{ marginTop: 12 }}
           >
             <Button
+              loading={id ? isLoadingUpdate : isLoadingPost}
               type="primary"
               htmlType="submit"
               disabled={!description || !summary}
