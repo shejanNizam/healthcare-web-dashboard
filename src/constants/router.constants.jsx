@@ -20,8 +20,8 @@ import InternationalApplicantDetails from "../pages/Main/International/Internati
 import JobPost from "../pages/Main/JobPost/JobPost";
 import JobPostPreview from "../pages/Main/JobPost/JobPostPreview";
 import Notifications from "../pages/Main/Notifications/Notifications";
-import StaffingSolutions from "../pages/Main/StuffSolutions/StaffingSolutions";
-import WorkforceManagement from "../pages/Main/StuffSolutions/WorkforceManagement";
+import AddEditForm from "../pages/Main/StuffSolutions/AddEditForm";
+import TabbedViewStaff from "../pages/Main/StuffSolutions/TabbedViewStaff";
 import EditMyProfile from "../pages/Profile/EditMyProfile";
 import MyProfile from "../pages/Profile/MyProfile";
 import EditPrivacyPolicy from "../pages/Settings/EditPrivacyPolicy";
@@ -125,22 +125,17 @@ export const dashboardItems = [
   },
   {
     name: "Stuff Solutions",
-    rootPath: "stuff-solutions",
-    icon: CiSettings,
-    children: [
-      {
-        name: "Staffing Solutions",
-        path: "stuff-solutions/staffing-solutions",
-        icon: CiUser,
-        element: <StaffingSolutions />,
-      },
-      {
-        name: "Workforce Manage",
-        icon: TbAirConditioning,
-        path: "stuff-solutions/workforce-management",
-        element: <WorkforceManagement />,
-      },
-    ],
+    path: "stuff-solutions",
+    icon: PiUsersThree,
+    element: <TabbedViewStaff />,
+  },
+  {
+    path: "add-staff",
+    element: <AddEditForm />,
+  },
+  {
+    path: "edit-staff/:id",
+    element: <AddEditForm />,
   },
   {
     name: "Settings",

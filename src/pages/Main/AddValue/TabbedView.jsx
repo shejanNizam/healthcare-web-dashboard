@@ -6,7 +6,7 @@ const { TabPane } = Tabs;
 export default function TabbedView() {
   return (
     <>
-      <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="1" centered>
         <TabPane
           tab={<span className="font-bold text-xl">Category</span>}
           key="1"

@@ -1,7 +1,7 @@
-export default function WorkforceManagement() {
+export default function WorkforceManagement({ type }) {
   return (
     <>
-      <h3>WorkforceManagement</h3>
+      <h3>WorkforceManagement============={type}</h3>
     </>
   );
 }
