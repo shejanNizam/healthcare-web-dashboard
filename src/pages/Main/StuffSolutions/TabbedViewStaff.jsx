@@ -1,31 +1,22 @@
-// export default function TabbedViewStaff() {
-//   return (
-//     <>
-//       <h3>TabbedViewStaff</h3>
-//     </>
-//   );
-// }
-
 import { Tabs } from "antd";
 import { useNavigate } from "react-router-dom";
 import StaffingSolutions from "./StaffingSolutions";
-import WorkforceManagement from "./WorkforceManagement";
 
 const { TabPane } = Tabs;
 
 export default function TabbedViewStaff() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <>
-      <div className="flex justify-end mr-4">
+      {/* <div className="flex justify-end mr-4">
         <button
           onClick={() => navigate(`/add-staff`)}
           className="text-white border bg-primary rounded-full px-6 py-2"
         >
           +Create
         </button>
-      </div>
+      </div> */}
       <Tabs defaultActiveKey="1" centered>
         <TabPane
           tab={<span className="font-bold text-xl">Staffing Solutions</span>}
@@ -37,7 +28,7 @@ export default function TabbedViewStaff() {
           tab={<span className="font-bold text-xl">Workforce Management</span>}
           key="2"
         >
-          <WorkforceManagement type="health" />
+          <StaffingSolutions type="health" />
         </TabPane>
       </Tabs>
     </>
