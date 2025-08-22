@@ -176,10 +176,14 @@ export default function AddEditForm() {
 
                 <Divider />
 
-                <br />
-                <br />
                 {/* whatWeDo section import */}
-                <WhatWeDo />
+                {type === `workforce_solutions` && (
+                  <>
+                    <br />
+                    <br />
+                    <WhatWeDo />
+                  </>
+                )}
                 <br />
                 <br />
 
