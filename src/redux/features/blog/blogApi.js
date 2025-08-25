@@ -75,8 +75,8 @@ export const blogApi = baseApi.injectEndpoints({
     }),
 
     getBlogDetails: builder.query({
-      query: (id) => ({
-        url: `/blog/single/${id}`,
+      query: (url) => ({
+        url: `/blog/single/${url}`,
         method: "GET",
       }),
       providesTags: ["blogs"],

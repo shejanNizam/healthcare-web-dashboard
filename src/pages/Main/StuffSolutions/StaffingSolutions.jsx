@@ -29,9 +29,7 @@ export default function StaffingSolutions({ type }) {
         <br />
         <div className="flex justify-end mr-4">
           <button
-            onClick={() =>
-              navigate(`/edit-staff/id=${stuff?._id}?type=${type}`)
-            }
+            onClick={() => navigate(`/edit-staff/${stuff?._id}?type=${type}`)}
             className="text-white border bg-primary rounded-full px-6 py-2"
           >
             Update

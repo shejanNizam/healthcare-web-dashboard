@@ -1,18 +1,10 @@
 import { UploadOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Select,
-  Spin,
-  Typography,
-  Upload,
-} from "antd";
+import { Button, Form, Input, message, Select, Spin, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ReactQuill from "react-quill";
-import { useNavigate, useParams } from "react-router-dom";
+import "react-quill/dist/quill.snow.css";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   useGetBlogDetailsQuery,
   usePostBlogMutation,
@@ -22,42 +14,52 @@ import { useUploadFileMutation } from "../../../redux/features/upload/uploadApi"
 import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 
 const { TextArea } = Input;
-const { Text } = Typography;
+const { Option } = Select;
 
 const baseImageUrl = import.meta.env.VITE_IMAGE_URL || "";
 
 export default function AddBlog() {
+  const [searchParams] = useSearchParams();
+  const url = searchParams.get("url");
+
   const { id } = useParams();
+
+  console.log(url);
+  console.log(id);
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const [description, setDescription] = useState("");
-  const [metaDescription, setMetaDescription] = useState("");
   const [fileList, setFileList] = useState([]);
-  const [companyLogoUrl, setCompanyLogoUrl] = useState("");
+  const [bannerUrl, setBannerUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [uploadFile] = useUploadFileMutation();
-  const { data, isLoading } = useGetBlogDetailsQuery(id, { skip: !id });
+
+  // Use URL-based query instead of ID-based
+  const { data, isLoading: isLoadingDetails } = useGetBlogDetailsQuery(url, {
+    skip: !url,
+  });
   const singleData = data?.data;
 
   const [postBlog, { isLoading: isPosting }] = usePostBlogMutation();
   const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation();
 
   const { data: categoryV } = useGetValueQuery("Category");
-  const categoryValue = categoryV?.data;
+  const categoryValue = categoryV?.data || [];
 
   useEffect(() => {
-    if (id && singleData) {
+    if (url && singleData) {
+      // Set all form fields with the existing data
       form.setFieldsValue({
         blogTitle: singleData.blogTitle,
-        blogAlias: singleData.blogAlias,
+        url: singleData.url,
         category: singleData.category,
-        tags: singleData.tags,
-        page_title: singleData.page_title,
-        url_handle: singleData.url_handle,
+        pageTitle: singleData.pageTitle,
+        meteDescription: singleData.meteDescription,
       });
+
       setDescription(singleData.description || "");
-      setMetaDescription(singleData.metaDescription || "");
 
       // Set fileList from existing banner if present
       if (singleData.banner) {
@@ -67,54 +69,60 @@ export default function AddBlog() {
             uid: "-1",
             name: filename,
             status: "done",
-            url: `${baseImageUrl || ""}${singleData.banner}`,
+            url: `${baseImageUrl}${singleData.banner}`,
           },
         ]);
-        setCompanyLogoUrl(singleData.banner);
+        setBannerUrl(singleData.banner);
       }
     }
-  }, [id, singleData, form]);
+  }, [url, singleData, form]);
 
   const onFinish = async (values) => {
-    console.log(values);
     if (!description) {
       message.error("Description is required");
       return;
     }
 
+    if (!bannerUrl) {
+      message.error("Banner image is required");
+      return;
+    }
+
     const payload = {
-      banner: companyLogoUrl,
       blogTitle: values.blogTitle,
-      blogAlias: values.blogAlias,
+      description: description,
+      banner: bannerUrl,
+      url: values.url,
       category: values.category,
-      tags: values.tags,
-      description,
-      page_title: values.page_title,
-      metaDescription,
-      url_handle: values.url_handle,
+      pageTitle: values.pageTitle,
+      meteDescription: values.meteDescription,
     };
-    console.log(payload);
 
     try {
+      setLoading(true);
       if (id) {
+        // Update using URL instead of ID
         await updateBlog({ id, blogData: payload }).unwrap();
-        message.success("Blog updated!");
+        message.success("Blog updated successfully!");
       } else {
         await postBlog(payload).unwrap();
-        message.success("Blog added!");
+        message.success("Blog created successfully!");
       }
       navigate("/blogs");
     } catch (error) {
-      console.log(error);
+      console.error("Error saving blog:", error);
       message.error(error?.data?.message || "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Updated upload handler from previous code
   const onUploadChange = async ({ file, fileList: newFileList }) => {
     setFileList(newFileList);
 
     if (file.status === "removed") {
-      setCompanyLogoUrl("");
+      setBannerUrl("");
       return;
     }
 
@@ -122,23 +130,40 @@ export default function AddBlog() {
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file.originFileObj || file);
 
       const response = await uploadFile(formData).unwrap();
 
       if (response.success && response.data?.path) {
-        setCompanyLogoUrl(response.data.path);
+        setBannerUrl(response.data.path);
+        message.success("Image uploaded successfully");
       } else {
         console.error("Upload failed: ", response.message || "No URL returned");
-        setCompanyLogoUrl("");
+        message.error("Image upload failed");
+        setBannerUrl("");
       }
     } catch (error) {
       console.error("Upload error: ", error);
-      setCompanyLogoUrl("");
+      message.error("Image upload failed");
+      setBannerUrl("");
     }
   };
 
-  if (isLoading) {
+  // Updated upload props from previous code
+  const uploadProps = {
+    beforeUpload: () => false,
+    onChange: onUploadChange,
+    fileList: fileList,
+    maxCount: 1,
+    accept: "image/*",
+    listType: "picture",
+    onRemove: () => {
+      setBannerUrl("");
+      return true;
+    },
+  };
+
+  if (isLoadingDetails) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spin size="large" />
@@ -147,15 +172,23 @@ export default function AddBlog() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 px-4 border shadow-sm rounded-lg">
+    <div className="max-w-3xl mx-auto mt-8 px-4 border shadow-sm rounded-lg bg-white">
       <h3 className="text-primary flex justify-start items-center gap-4 text-xl font-semibold my-6">
-        <button onClick={() => navigate(-1)}>
+        <button onClick={() => navigate(-1)} className="text-primary">
           <FaArrowLeft />
         </button>
-        {id ? "Edit Blog" : "Add Blog"}
+        {url ? "Edit Blog" : "Add Blog"}
       </h3>
 
-      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        // initialValues={{
+        //   category: "all",
+        // }}
+      >
+        {/* Updated Banner Upload from previous code */}
         <Form.Item label="Banner" name="banner">
           <Upload
             beforeUpload={() => false}
@@ -164,7 +197,7 @@ export default function AddBlog() {
             maxCount={1}
             accept="image/*"
             listType="picture"
-            onRemove={() => setCompanyLogoUrl("")}
+            onRemove={() => setBannerUrl("")}
           >
             <Button icon={<UploadOutlined />}>Upload Banner</Button>
           </Upload>
@@ -175,15 +208,7 @@ export default function AddBlog() {
           name="blogTitle"
           rules={[{ required: true, message: "Please input blog title" }]}
         >
-          <Input placeholder="Blog title" />
-        </Form.Item>
-
-        <Form.Item
-          label="Blog Alias"
-          name="blogAlias"
-          rules={[{ required: true, message: "Please input blog alias" }]}
-        >
-          <Input placeholder="Blog alias" />
+          <Input placeholder="Enter blog title" />
         </Form.Item>
 
         <Form.Item
@@ -191,8 +216,8 @@ export default function AddBlog() {
           name="category"
           rules={[{ required: true, message: "Please select a category" }]}
         >
-          <Select placeholder="Select Category" style={{ width: "100%" }}>
-            {categoryValue?.map((cat) => (
+          <Select placeholder="Select Category">
+            {categoryValue.map((cat) => (
               <Option key={cat._id} value={cat.type}>
                 {cat.type}
               </Option>
@@ -201,42 +226,33 @@ export default function AddBlog() {
         </Form.Item>
 
         <Form.Item
-          label="Tags"
-          name="tags"
-          rules={[{ required: true, message: "Please select tags" }]}
+          label="Description"
+          required
+          validateStatus={!description ? "error" : ""}
+          help={!description ? "Description is required" : ""}
         >
-          <Select
-            mode="multiple"
-            placeholder="Select Tags"
-            style={{ width: "100%" }}
-          >
-            {categoryValue?.map((cat) => (
-              <Option key={cat._id} value={cat.type}>
-                {cat.type}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <div className="my-12">
-          <label className="block mb-2 font-medium">Description</label>
           <ReactQuill
             theme="snow"
             value={description}
             onChange={setDescription}
-            style={{ height: 200 }}
+            style={{ height: 200, marginBottom: 40 }}
+            modules={{
+              toolbar: [
+                [{ header: [1, 2, false] }],
+                ["bold", "italic", "underline", "strike", "blockquote"],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["link", "image"],
+                ["clean"],
+              ],
+            }}
           />
-          {!description && (
-            <div className="text-red-600 mt-2">Description is required</div>
-          )}
-        </div>
+        </Form.Item>
 
-        {/* search engine lsiting */}
+        {/* search engine listing */}
         <h1 className="text-2xl font-bold pb-6">Search Engine Listing</h1>
 
         <h3 className="text-xl text-primary ">Cenmhealthcare</h3>
         <p className="text-primary text-xs pb-6">https//: cenmhealtcare.com</p>
-        {/* <link className="" rel="stylesheet" href="https//: cenmhealtcare.com" /> */}
         <p className="text-primary text-xl font-semibold pb-2">
           Staff for hospitals, clinics, and care homes across the UK.
         </p>
@@ -246,56 +262,50 @@ export default function AddBlog() {
           across the UK.
         </p>
 
-        {/* paeg title */}
+        {/* page title */}
         <Form.Item
           label="Page Title"
           name="pageTitle"
           rules={[{ required: true, message: "Please input page title" }]}
+          tooltip="This appears in browser tabs and search results"
         >
-          <Input placeholder="page title input here" />
+          <Input placeholder="Enter page title for SEO" />
         </Form.Item>
 
-        {/* meta descrition */}
-        {/* <div className="my-12">
-          <label className="block mb-2 font-medium">Meta Description</label>
-          <ReactQuill
-            theme="snow"
-            value={metaDescription}
-            onChange={setMetaDescription}
-            style={{ height: 200 }}
-          />
-          {!metaDescription && (
-            <div className="text-red-600 mt-2">
-              Meta Description is required
-            </div>
-          )}
-        </div> */}
-
-        {/* meta descrition */}
-        <Form.Item name="metaDescription" label="Meta description">
+        {/* meta description */}
+        <Form.Item
+          label="Meta Description"
+          name="meteDescription"
+          rules={[{ required: true, message: "Please input meta description" }]}
+          tooltip="This appears in search results under your page title"
+        >
           <TextArea
-            rows={3}
-            placeholder="Enter meta description for search engines"
+            rows={4}
+            placeholder="Enter meta description for search engines (150-160 characters recommended)"
+            maxLength={160}
+            showCount
           />
         </Form.Item>
 
         {/* url handler */}
         <Form.Item
-          label="Url handle"
-          name="url_handle"
-          rules={[{ required: true, message: "Please input Url handle" }]}
+          label="URL Handle"
+          name="url"
+          rules={[{ required: true, message: "Please input URL handle" }]}
+          tooltip="This will be used in the blog URL (e.g., your-blog-title)"
         >
-          <Input placeholder="Url handle input here" />
+          <Input placeholder="e.g., test_test" />
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item className="mt-6">
           <Button
             type="primary"
             htmlType="submit"
-            className="w-full"
-            loading={isPosting || isUpdating}
+            size="large"
+            loading={loading || isPosting || isUpdating}
+            className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            Submit
+            {url ? "Update Blog" : "Publish Blog"}
           </Button>
         </Form.Item>
       </Form>

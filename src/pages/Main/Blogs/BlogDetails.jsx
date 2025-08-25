@@ -8,9 +8,10 @@ const baseImageUrl = import.meta.env.VITE_IMAGE_URL;
 
 export default function BlogDetails() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { url } = useParams();
+  console.log(url);
 
-  const { data, isLoading, isError } = useGetBlogDetailsQuery(id);
+  const { data, isLoading, isError } = useGetBlogDetailsQuery(url);
 
   if (isLoading) {
     return (

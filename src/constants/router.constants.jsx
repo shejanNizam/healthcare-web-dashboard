@@ -102,7 +102,7 @@ export const dashboardItems = [
     element: <Blogs />,
   },
   {
-    path: "blogs/:id",
+    path: "blogs/:url",
     element: <BlogDetails />,
   },
   {

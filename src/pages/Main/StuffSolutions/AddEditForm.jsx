@@ -93,6 +93,7 @@ export default function AddEditForm() {
                 layout="vertical"
                 onFinish={handleSubmit}
                 className="space-y-4"
+                // initialValues={}
               >
                 <div className="mb-6">
                   <h3 className="text-base font-medium text-gray-700 mb-3">
@@ -264,7 +265,7 @@ export default function AddEditForm() {
                   <Input
                     placeholder="Enter URL handle"
                     size="large"
-                    addonBefore="https://cenmhealthcare.com/blogs/"
+                    addonBefore="https://cenmhealthcare.com/"
                   />
                 </Form.Item>
 
