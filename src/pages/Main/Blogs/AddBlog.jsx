@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import {
   useGetBlogDetailsQuery,
   usePostBlogMutation,
@@ -18,14 +23,14 @@ const { Option } = Select;
 
 const baseImageUrl = import.meta.env.VITE_IMAGE_URL || "";
 
+const MAIN_DOMAIN = import.meta.env.VITE_MAIN_DOMAIN || "update url";
+
 export default function AddBlog() {
   const [searchParams] = useSearchParams();
   const url = searchParams.get("url");
 
   const { id } = useParams();
 
-  console.log(url);
-  console.log(id);
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -36,11 +41,11 @@ export default function AddBlog() {
 
   const [uploadFile] = useUploadFileMutation();
 
-  // Use URL-based query instead of ID-based
   const { data, isLoading: isLoadingDetails } = useGetBlogDetailsQuery(url, {
     skip: !url,
   });
   const singleData = data?.data;
+  console.log(singleData);
 
   const [postBlog, { isLoading: isPosting }] = usePostBlogMutation();
   const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation();
@@ -50,7 +55,6 @@ export default function AddBlog() {
 
   useEffect(() => {
     if (url && singleData) {
-      // Set all form fields with the existing data
       form.setFieldsValue({
         blogTitle: singleData.blogTitle,
         url: singleData.url,
@@ -61,7 +65,6 @@ export default function AddBlog() {
 
       setDescription(singleData.description || "");
 
-      // Set fileList from existing banner if present
       if (singleData.banner) {
         const filename = singleData.banner.split("/").pop();
         setFileList([
@@ -101,7 +104,6 @@ export default function AddBlog() {
     try {
       setLoading(true);
       if (id) {
-        // Update using URL instead of ID
         await updateBlog({ id, blogData: payload }).unwrap();
         message.success("Blog updated successfully!");
       } else {
@@ -117,7 +119,6 @@ export default function AddBlog() {
     }
   };
 
-  // Updated upload handler from previous code
   const onUploadChange = async ({ file, fileList: newFileList }) => {
     setFileList(newFileList);
 
@@ -149,20 +150,6 @@ export default function AddBlog() {
     }
   };
 
-  // Updated upload props from previous code
-  const uploadProps = {
-    beforeUpload: () => false,
-    onChange: onUploadChange,
-    fileList: fileList,
-    maxCount: 1,
-    accept: "image/*",
-    listType: "picture",
-    onRemove: () => {
-      setBannerUrl("");
-      return true;
-    },
-  };
-
   if (isLoadingDetails) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -180,15 +167,7 @@ export default function AddBlog() {
         {url ? "Edit Blog" : "Add Blog"}
       </h3>
 
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-        // initialValues={{
-        //   category: "all",
-        // }}
-      >
-        {/* Updated Banner Upload from previous code */}
+      <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item label="Banner" name="banner">
           <Upload
             beforeUpload={() => false}
@@ -252,14 +231,18 @@ export default function AddBlog() {
         <h1 className="text-2xl font-bold pb-6">Search Engine Listing</h1>
 
         <h3 className="text-xl text-primary ">Cenmhealthcare</h3>
-        <p className="text-primary text-xs pb-6">https//: cenmhealtcare.com</p>
+        <Link to="#" className="text-blue-600 underline text-xs" />
+        <p className="text-primary text-xs pb-6">
+          {" "}
+          {url
+            ? MAIN_DOMAIN + `/blogs/` + singleData?.url
+            : MAIN_DOMAIN + `/blogs/`}
+        </p>
         <p className="text-primary text-xl font-semibold pb-2">
-          Staff for hospitals, clinics, and care homes across the UK.
+          {url ? singleData?.pageTitle : "Title show Here"}
         </p>
         <p className="pb-6">
-          Reliable healthcare staffing agency providing qualified nurses,
-          caregivers, and medical staff for hospitals, clinics, and care homes
-          across the UK.
+          {url ? singleData?.meteDescription : "Description show here "}
         </p>
 
         {/* page title */}
