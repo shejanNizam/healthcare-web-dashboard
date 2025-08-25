@@ -23,6 +23,8 @@ import WhatWeDo from "./WhatWeDo";
 const { TextArea } = Input;
 const { Option } = Select;
 
+const MAIN_URL = import.meta.env.VITE_MAIN_DOMAIN;
+
 export default function AddEditForm() {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
@@ -48,6 +50,7 @@ export default function AddEditForm() {
       skip: !id,
     }
   );
+  console.log(existingData);
 
   const [addStuff] = useAddStuffMutation();
   const [updateStuff] = useUpdateStuffMutation();
@@ -69,7 +72,7 @@ export default function AddEditForm() {
         whyChooseUs: singleStuff.why_choose,
         tags: singleStuff.tags,
         pageTitle: singleStuff.pageTitle,
-        metaDescription: singleStuff.mateDescription,
+        mateDescription: singleStuff.mateDescription,
         urlHandle: type,
         whatWeDo: singleStuff.whatWeDo || [],
         faq: singleStuff.faq || [],
@@ -95,7 +98,7 @@ export default function AddEditForm() {
         why_choose: values.whyChooseUs,
         tags: values.tags,
         pageTitle: values.pageTitle,
-        mateDescription: values.metaDescription,
+        mateDescription: values.mateDescription,
         url: type,
         whatWeDo: values.whatWeDo || [],
         faq: values.faq || [],
@@ -315,17 +318,18 @@ export default function AddEditForm() {
                 </h1>
 
                 <h3 className="text-xl text-primary ">Cenmhealthcare</h3>
-                <p className="text-primary text-xs pb-6">
-                  https://cenmhealthcare.com
-                </p>
+                <a
+                  target="_blank"
+                  className="text-primary text-xs pb-6"
+                  href={MAIN_URL + `/` + type}
+                >
+                  {MAIN_URL + `/` + type}
+                </a>
+
                 <p className="text-primary text-xl font-semibold">
-                  Staff for hospitals, clinics, and care homes across the UK.
+                  {existingData?.data?.pageTitle}
                 </p>
-                <p className="pb-6">
-                  Reliable healthcare staffing agency providing qualified
-                  nurses, caregivers, and medical staff for hospitals, clinics,
-                  and care homes across the UK.
-                </p>
+                <p className="pb-6">{existingData?.data?.mateDescription}</p>
 
                 {/* Page title */}
                 <Form.Item
@@ -340,7 +344,7 @@ export default function AddEditForm() {
 
                 {/* Meta description */}
                 <Form.Item
-                  name="metaDescription"
+                  name="mateDescription"
                   label="Meta description"
                   rules={[
                     {
