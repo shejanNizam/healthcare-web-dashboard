@@ -1,7 +1,21 @@
-import { Button, Card, Divider, Form, Input, Select, message } from "antd";
-import { useState } from "react";
+import {
+  Button,
+  Card,
+  Divider,
+  Form,
+  Input,
+  message,
+  Select,
+  Spin,
+} from "antd";
+import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  useAddStuffMutation,
+  useGetSingleStuffQuery,
+  useUpdateStuffMutation,
+} from "../../../redux/features/stuff/stuffApi";
 import { useGetValueQuery } from "../../../redux/features/value/valueApi";
 import Faq from "./Faq";
 import WhatWeDo from "./WhatWeDo";
@@ -15,61 +29,124 @@ export default function AddEditForm() {
 
   const navigate = useNavigate();
   const { id } = useParams();
+  // console.log(id);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [initialValuesSet, setInitialValuesSet] = useState(false);
 
   const { data: categoryV } = useGetValueQuery("Category");
   const categoryValue = categoryV?.data;
 
-  console.log(type);
-
-  // Mock API call function
-  const submitToAPI = async (data) => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Replace this URL with your actual API endpoint
-    const response = await fetch("/api/staffing-solutions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to submit form");
+  // Fetch existing data when in edit mode
+  const {
+    data: existingData,
+    isLoading: isDataLoading,
+    error,
+  } = useGetSingleStuffQuery(
+    { id },
+    {
+      skip: !id,
     }
+  );
 
-    return response.json();
-  };
+  const [addStuff] = useAddStuffMutation();
+  const [updateStuff] = useUpdateStuffMutation();
+
+  // Set initial values when existing data is available
+  useEffect(() => {
+    if (id && existingData && !initialValuesSet) {
+      const singleStuff = existingData.data;
+
+      // Transform the API data to match form field names
+      const formValues = {
+        serviceAlias: singleStuff.serviceAlias,
+        // type: singleStuff.type,
+        type: type,
+        bannerHeading: singleStuff.bannerHeading,
+        tagline: singleStuff.tagline,
+        title: singleStuff.title,
+        description: singleStuff.description,
+        whyChooseUs: singleStuff.why_choose,
+        tags: singleStuff.tags,
+        pageTitle: singleStuff.pageTitle,
+        metaDescription: singleStuff.mateDescription,
+        urlHandle: type,
+        whatWeDo: singleStuff.whatWeDo || [],
+        faq: singleStuff.faq || [],
+      };
+
+      form.setFieldsValue(formValues);
+      setInitialValuesSet(true);
+    }
+  }, [id, existingData, form, initialValuesSet]);
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    console.log(values);
 
     try {
-      const payload = {
-        ...values,
+      const jobData = {
+        serviceAlias: values.serviceAlias,
+        // type: values.type,
+        type: type,
+        bannerHeading: values.bannerHeading,
+        tagline: values.tagline,
+        title: values.title,
+        description: values.description,
+        why_choose: values.whyChooseUs,
+        tags: values.tags,
+        pageTitle: values.pageTitle,
+        mateDescription: values.metaDescription,
+        url: type,
+        whatWeDo: values.whatWeDo || [],
+        faq: values.faq || [],
       };
 
-      console.log("Submitting payload:", payload);
+      if (id) {
+        // Update existing stuff
+        const result = await updateStuff({ id, jobData }).unwrap();
+        message.success("Staff updated successfully!");
+        console.log("Update response:", result);
+      } else {
+        // Add new stuff
+        const result = await addStuff({ jobData }).unwrap();
+        message.success("Staff added successfully!");
+        console.log("Add response:", result);
+      }
 
-      // Call the API
-      const result = await submitToAPI(payload);
-
-      message.success("Form submitted successfully!");
-      console.log("API Response:", result);
-
-      // Optionally reset form after successful submission
-      // form.resetFields();
+      // Navigate back or to another page on success
+      navigate(-1);
     } catch (error) {
       console.error("Submission error:", error);
-      message.error("Failed to submit form. Please try again.");
+      message.error(
+        error.data?.message || "Failed to submit form. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  // Show loading spinner while fetching existing data
+  if (id && isDataLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  // Show error message if data fetching fails
+  if (id && error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-red-600 text-xl mb-4">Error loading data</h2>
+          <Button type="primary" onClick={() => navigate(-1)}>
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -84,8 +161,16 @@ export default function AddEditForm() {
                   <FaArrowLeft />
                 </button>
                 {id
-                  ? "Edit Nsrsing and Allied health"
-                  : "Add Nsrsing and Allied health"}
+                  ? `Edit ${
+                      type === "workforce_solutions"
+                        ? "Workforce Solutions"
+                        : "Staffing Solutions"
+                    }`
+                  : `Add ${
+                      type === "workforce_solutions"
+                        ? "Workforce Solutions"
+                        : "Staffing Solutions"
+                    }`}
               </h3>
 
               <Form
@@ -93,8 +178,12 @@ export default function AddEditForm() {
                 layout="vertical"
                 onFinish={handleSubmit}
                 className="space-y-4"
-                // initialValues={}
               >
+                {/* Hidden type field */}
+                <Form.Item name="type" hidden>
+                  <Input type="hidden" />
+                </Form.Item>
+
                 <div className="mb-6">
                   <h3 className="text-base font-medium text-gray-700 mb-3">
                     Service alias
@@ -133,7 +222,7 @@ export default function AddEditForm() {
                   {/* Tagline */}
                   <Form.Item
                     label="Tagline"
-                    name="tagLine"
+                    name="tagline"
                     rules={[
                       { required: true, message: "Please enter tagline" },
                     ]}
@@ -168,7 +257,17 @@ export default function AddEditForm() {
                 </div>
 
                 {/* Why Choose Us */}
-                <Form.Item label="Why choose us" name="whyChooseUs">
+                <Form.Item
+                  label="Why choose us"
+                  name="whyChooseUs"
+                  rules={[
+                    {
+                      required: true,
+                      message:
+                        "Please explain why customers should choose your service",
+                    },
+                  ]}
+                >
                   <TextArea
                     rows={4}
                     placeholder="Explain why customers should choose your service"
@@ -177,19 +276,17 @@ export default function AddEditForm() {
 
                 <Divider />
 
-                {/* whatWeDo section import */}
-                {type === `workforce_solutions` && (
+                {/* whatWeDo section - conditionally rendered based on type */}
+                {type === "workforce_solutions" && (
                   <>
+                    <WhatWeDo form={form} />
                     <br />
-                    <br />
-                    <WhatWeDo />
                   </>
                 )}
-                <br />
-                <br />
 
-                {/* faq section import */}
-                <Faq />
+                {/* faq section */}
+                <Faq form={form} />
+                <br />
 
                 <Form.Item
                   label="Tags"
@@ -219,9 +316,8 @@ export default function AddEditForm() {
 
                 <h3 className="text-xl text-primary ">Cenmhealthcare</h3>
                 <p className="text-primary text-xs pb-6">
-                  https//: cenmhealtcare.com
+                  https://cenmhealthcare.com
                 </p>
-                {/* <link className="" rel="stylesheet" href="https//: cenmhealtcare.com" /> */}
                 <p className="text-primary text-xl font-semibold">
                   Staff for hospitals, clinics, and care homes across the UK.
                 </p>
@@ -231,7 +327,7 @@ export default function AddEditForm() {
                   and care homes across the UK.
                 </p>
 
-                {/* paeg title */}
+                {/* Page title */}
                 <Form.Item
                   label="Page title"
                   name="pageTitle"
@@ -241,12 +337,16 @@ export default function AddEditForm() {
                 >
                   <Input placeholder="Enter page title" size="large" />
                 </Form.Item>
-                {/* meta descrition */}
+
+                {/* Meta description */}
                 <Form.Item
                   name="metaDescription"
                   label="Meta description"
                   rules={[
-                    { required: true, message: "Please input metadescription" },
+                    {
+                      required: true,
+                      message: "Please input meta description",
+                    },
                   ]}
                 >
                   <TextArea
@@ -254,18 +354,21 @@ export default function AddEditForm() {
                     placeholder="Enter meta description for search engines"
                   />
                 </Form.Item>
-                {/* url handler */}
+
+                {/* URL handle */}
                 <Form.Item
                   name="urlHandle"
                   label="URL handle"
                   rules={[
-                    { required: true, message: "Please input urlHandle" },
+                    { required: true, message: "Please input URL handle" },
                   ]}
                 >
                   <Input
                     placeholder="Enter URL handle"
                     size="large"
                     addonBefore="https://cenmhealthcare.com/"
+                    defaultValue={type}
+                    readOnly={true}
                   />
                 </Form.Item>
 
@@ -279,7 +382,7 @@ export default function AddEditForm() {
                     className="w-full bg-primary hover:bg-primary/80 h-12 text-base font-medium"
                     block
                   >
-                    {loading ? "Submitting..." : "Submit"}
+                    {loading ? "Submitting..." : id ? "Update" : "Submit"}
                   </Button>
                 </div>
               </Form>

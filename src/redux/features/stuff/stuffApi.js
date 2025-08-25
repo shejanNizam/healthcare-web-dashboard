@@ -11,6 +11,15 @@ export const stuffApi = baseApi.injectEndpoints({
       providesTags: ["stuff"],
     }),
 
+    //  get single stuff
+    getSingleStuff: builder.query({
+      query: ({ id }) => ({
+        url: `/staffing/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["stuff"],
+    }),
+
     // get value
     // getValue: builder.query({
     //   query: (value) => ({
@@ -24,23 +33,23 @@ export const stuffApi = baseApi.injectEndpoints({
     // }),
 
     //  add
-    // addValue: builder.mutation({
-    //   query: ({ value, jobData }) => ({
-    //     url: `/value/create/${value}`,
-    //     method: "POST",
-    //     body: jobData,
-    //   }),
-    //   invalidatesTags: ["value"],
-    // }),
+    addStuff: builder.mutation({
+      query: ({ jobData }) => ({
+        url: `/staffing/create`,
+        method: "POST",
+        body: jobData,
+      }),
+      invalidatesTags: ["stuff"],
+    }),
     //  update
-    // updateValue: builder.mutation({
-    //   query: ({ id, value, jobData }) => ({
-    //     url: `/value/update/${value}/${id}`,
-    //     method: "POST",
-    //     body: jobData,
-    //   }),
-    //   invalidatesTags: ["value"],
-    // }),
+    updateStuff: builder.mutation({
+      query: ({ id, jobData }) => ({
+        url: `/staffing/update/${id}`,
+        method: "POST",
+        body: jobData,
+      }),
+      invalidatesTags: ["stuff"],
+    }),
 
     // delete
     // deleteValue: builder.mutation({
@@ -53,4 +62,9 @@ export const stuffApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetStuffQuery } = stuffApi;
+export const {
+  useGetStuffQuery,
+  useGetSingleStuffQuery,
+  useAddStuffMutation,
+  useUpdateStuffMutation,
+} = stuffApi;
