@@ -38,7 +38,7 @@ export default function WhatWeDo({ whatWeDoItems }) {
 
   const handleModalSubmit = (values) => {
     if (values.text) {
-      setWhatWeDoItems([...whatWeDoItems, values.text]);
+      // setWhatWeDoItems([...whatWeDoItems, values.text]);
       message.success("Item added successfully");
     }
     setIsModalVisible(false);

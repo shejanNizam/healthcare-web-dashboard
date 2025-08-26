@@ -42,7 +42,7 @@ export default function AddEditForm() {
 
   const { data } = useGetStuffQuery();
   const stuff = data?.data?.find((item) => item.type === type);
-  const faqs = stuff?.FAQ;
+
   const whatWeDoItems = stuff?.what_we_do;
   console.log(stuff?.FAQ);
 
@@ -295,7 +295,7 @@ export default function AddEditForm() {
                 )}
 
                 {/* faq section */}
-                <Faq form={form} faqs={faqs} />
+                <Faq form={form} stuff={stuff} />
                 <br />
 
                 <Form.Item

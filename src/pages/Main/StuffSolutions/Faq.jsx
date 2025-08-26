@@ -3,16 +3,23 @@ import { Button, Form, Modal } from "antd";
 import { useState } from "react";
 
 import { Input, Select, message } from "antd";
+import {
+  useAddFaqMutation,
+  useDeleteFaqMutation,
+} from "../../../redux/features/stuff/stuffApi";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-export default function Faq({ faqs }) {
+export default function Faq({ stuff }) {
   const [faqForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   //   const [editingFaqIndex, setEditingFaqIndex] = useState(null);
 
-  console.log(faqs);
+  const faqs = stuff?.FAQ;
+
+  const [addFaq, { isLoading: isLoadingAddFaq }] = useAddFaqMutation();
+  const [deleteFaq] = useDeleteFaqMutation();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -26,23 +33,51 @@ export default function Faq({ faqs }) {
   //     faqForm.setFieldsValue(faqs[index]);
   //   };
 
-  const handleDeleteFaq = (index) => {
+  const handleDeleteFaq = async (id) => {
+    console.log(id);
     Modal.confirm({
       title: "Delete FAQ",
       content: "Are you sure you want to delete this FAQ?",
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
-      onOk() {
-        setFaqs(faqs.filter((_, i) => i !== index));
-        message.success("FAQ deleted successfully");
+      onOk: async () => {
+        // setFaqs(faqs.filter((_, i) => i !== index));
+        try {
+          console.log(id);
+          const payload = {
+            stuffId: stuff?._id,
+            faqId: id,
+          };
+          await deleteFaq(payload).unwrap();
+          message.success("FAQ deleted successfully");
+        } catch (error) {
+          message.error(
+            error.data?.message || "Failed to delete. Please try again."
+          );
+        }
       },
     });
   };
 
-  const handleFaqModalSubmit = (values) => {
-    console.log(values);
-    setIsModalVisible(false);
+  const handleFaqModalSubmit = async (values) => {
+    try {
+      const payload = {
+        stuffId: stuff?._id,
+        param: true,
+        body: values,
+      };
+      // console.log(payload);
+
+      await addFaq(payload).unwrap();
+      setIsModalVisible(false);
+      message.success("Faq added successfully!");
+    } catch (error) {
+      console.log(error);
+      message.error(
+        error.data?.message || "Failed to Add Faq. Please try again."
+      );
+    }
   };
 
   const handleModalCancel = () => {
@@ -67,9 +102,9 @@ export default function Faq({ faqs }) {
         </div>
 
         <div className="space-y-3">
-          {faqs?.map((faq, index) => (
+          {faqs?.map((faq) => (
             <div
-              key={index}
+              key={faq._id}
               className="flex items-start justify-between p-4 bg-gray-50 rounded-lg border"
             >
               <div className="flex-1 mr-4">
@@ -91,7 +126,7 @@ export default function Faq({ faqs }) {
                   size="small"
                   danger
                   icon={<DeleteOutlined />}
-                  onClick={() => handleDeleteFaq(index)}
+                  onClick={() => handleDeleteFaq(faq?._id)}
                 >
                   Delete
                 </Button>
@@ -120,7 +155,7 @@ export default function Faq({ faqs }) {
           onFinish={handleFaqModalSubmit}
         >
           <Form.Item
-            name="question"
+            name="newQuestion"
             label="Question"
             rules={[{ required: true, message: "Please enter the question" }]}
           >
@@ -128,7 +163,7 @@ export default function Faq({ faqs }) {
           </Form.Item>
 
           <Form.Item
-            name="answer"
+            name="ans"
             label="Answer"
             rules={[{ required: true, message: "Please enter the answer" }]}
           >
@@ -141,12 +176,12 @@ export default function Faq({ faqs }) {
               type="primary"
               htmlType="submit"
               size="large"
-              //   loading={loading}
+              loading={isLoadingAddFaq}
               className="w-full bg-primary hover:bg-primary/80 h-12 text-base font-medium"
               block
             >
-              {/* {loading ? "Submitting..." : "Submit"} */}
-              Submit
+              {isLoadingAddFaq ? "Submitting..." : "Submit"}
+              {/* Submit */}
             </Button>
           </div>
         </Form>

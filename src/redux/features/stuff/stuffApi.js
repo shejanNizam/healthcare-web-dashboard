@@ -20,18 +20,6 @@ export const stuffApi = baseApi.injectEndpoints({
       providesTags: ["stuff"],
     }),
 
-    // get value
-    // getValue: builder.query({
-    //   query: (value) => ({
-    //     url: `/value/all/${value}`,
-    //     method: "GET",
-    //     // params: {
-    //     //   value,
-    //     // },
-    //   }),
-    //   providesTags: ["value"],
-    // }),
-
     //  add
     addStuff: builder.mutation({
       query: ({ jobData }) => ({
@@ -51,14 +39,26 @@ export const stuffApi = baseApi.injectEndpoints({
       invalidatesTags: ["stuff"],
     }),
 
+    //  add faq
+    addFaq: builder.mutation({
+      query: ({ stuffId, param, body }) => {
+        return {
+          url: `/staffing/FQA/${stuffId}?add=${param}`,
+          method: `PATCH`,
+          body,
+        };
+      },
+      invalidatesTags: ["stuff"],
+    }),
+
     // delete
-    // deleteValue: builder.mutation({
-    //   query: ({ id }) => ({
-    //     url: `/value/delete/${id}`,
-    //     method: "DELETE",
-    //   }),
-    //   invalidatesTags: ["value"],
-    // }),
+    deleteFaq: builder.mutation({
+      query: ({ stuffId, faqId }) => ({
+        url: `/staffing/FQA/${stuffId}?pull=${faqId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["stuff"],
+    }),
   }),
 });
 
@@ -67,4 +67,8 @@ export const {
   useGetSingleStuffQuery,
   useAddStuffMutation,
   useUpdateStuffMutation,
+  //   faq
+  useAddFaqMutation,
+  useDeleteFaqMutation,
+  //   what we do
 } = stuffApi;
