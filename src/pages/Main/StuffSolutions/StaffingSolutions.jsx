@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useGetStuffQuery } from "../../../redux/features/stuff/stuffApi";
 
+const MAIN_URL = import.meta.env.VITE_MAIN_DOMAIN;
+
 export default function StaffingSolutions({ type }) {
   const navigate = useNavigate();
 
@@ -22,8 +24,25 @@ export default function StaffingSolutions({ type }) {
         StaffingSolutions {"============>"} {type}
       </h3>
       <div className="border rounded-sm shadow-sm p-4 m-4">
-        <h1>Staff alias</h1>
-        <p> {stuff?.bannerHeading} </p>
+        <div className="px-20">
+          <h1 className="text-2xl font-bold pb-2">Search Engine Listing</h1>
+          <br />
+
+          <h3 className="text-xl text-primary ">Cenmhealthcare</h3>
+          <a
+            target="_blank"
+            className="text-primary text-xs pb-6"
+            href={MAIN_URL + `/` + type}
+          >
+            {MAIN_URL + `/` + type}
+          </a>
+          <br />
+          <br />
+          <p className="text-primary text-xl font-semibold">
+            {stuff?.pageTitle}
+          </p>
+          <p className="pb-6 text-wrap">{stuff?.mateDescription}</p>
+        </div>
 
         <br />
         <br />
