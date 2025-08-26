@@ -7,42 +7,12 @@ import { Input, Select, message } from "antd";
 const { TextArea } = Input;
 const { Option } = Select;
 
-export default function Faq() {
+export default function Faq({ faqs }) {
   const [faqForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   //   const [editingFaqIndex, setEditingFaqIndex] = useState(null);
 
-  const [faqs, setFaqs] = useState([
-    {
-      question: "How can I pay for my order?",
-      answer: "We accept all major credit cards and PayPal.",
-    },
-    {
-      question: "How can I track a product?",
-      answer:
-        "You will receive a tracking number via email once your order ships.",
-    },
-    {
-      question: "How can I return a product?",
-      answer: "Items can be returned within 30 days of purchase.",
-    },
-    {
-      question: "What is your refund policy?",
-      answer: "Full refunds are provided for returns within 30 days.",
-    },
-    {
-      question: "How long does shipping take?",
-      answer: "Standard shipping takes 3-5 business days.",
-    },
-    {
-      question: "Do you offer international shipping?",
-      answer: "Yes, we ship to most countries worldwide.",
-    },
-    {
-      question: "How can I contact customer support?",
-      answer: "You can reach us via email or live chat 24/7.",
-    },
-  ]);
+  console.log(faqs);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -97,7 +67,7 @@ export default function Faq() {
         </div>
 
         <div className="space-y-3">
-          {faqs.map((faq, index) => (
+          {faqs?.map((faq, index) => (
             <div
               key={index}
               className="flex items-start justify-between p-4 bg-gray-50 rounded-lg border"
@@ -106,17 +76,17 @@ export default function Faq() {
                 <div className="font-medium text-gray-800 mb-1">
                   {faq.question}
                 </div>
-                <div className="text-sm text-gray-600">{faq.answer}</div>
+                <div className="text-sm text-gray-600">{faq.ans}</div>
               </div>
               <div className="flex space-x-2 flex-shrink-0">
                 {/* <Button
-                            size="small"
-                            icon={<EditOutlined />}
-                            onClick={() => handleEditFaq(index)}
-                            className="text-blue-600 border-blue-600 hover:bg-blue-50"
-                          >
-                            Edit
-                          </Button> */}
+                  size="small"
+                  icon={<EditOutlined />}
+                  onClick={() => handleEditFaq(index)}
+                  className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                >
+                  Edit
+                </Button> */}
                 <Button
                   size="small"
                   danger

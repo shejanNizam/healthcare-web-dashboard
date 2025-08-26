@@ -6,22 +6,22 @@ import { Input, message } from "antd";
 
 const { TextArea } = Input;
 
-export default function WhatWeDo() {
+export default function WhatWeDo({ whatWeDoItems }) {
   const [whatWeDoForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [whatWeDoItems, setWhatWeDoItems] = useState([
-    "Manage service",
-    "VMS technology",
-    "Business intelligence",
-  ]);
+  // const [whatWeDoItems, setWhatWeDoItems] = useState([
+  //   "Manage service",
+  //   "VMS technology",
+  //   "Business intelligence",
+  // ]);
 
   const showModal = () => {
     setIsModalVisible(true);
     whatWeDoForm.resetFields();
   };
 
-  const handleDeleteItem = (index) => {
+  const handleDeleteItem = (id) => {
     Modal.confirm({
       title: "Delete Item",
       content: "Are you sure you want to delete this item?",
@@ -29,7 +29,8 @@ export default function WhatWeDo() {
       okType: "danger",
       cancelText: "No",
       onOk() {
-        setWhatWeDoItems(whatWeDoItems.filter((_, i) => i !== index));
+        console.log(id);
+        // setWhatWeDoItems(whatWeDoItems.filter((_, i) => i !== index));
         message.success("Item deleted successfully");
       },
     });
@@ -69,20 +70,22 @@ export default function WhatWeDo() {
         </div>
 
         <div className="space-y-3">
-          {whatWeDoItems.map((item, index) => (
+          {whatWeDoItems?.map((item) => (
             <div
-              key={index}
+              key={item?._id}
               className="flex items-start justify-between p-4 bg-gray-50 rounded-lg border"
             >
               <div className="flex-1 mr-4">
-                <div className="font-medium text-gray-800 mb-1">{item}</div>
+                <div className="font-medium text-gray-800 mb-1">
+                  {item?.type}
+                </div>
               </div>
               <div className="flex space-x-2 flex-shrink-0">
                 <Button
                   size="small"
                   danger
                   icon={<DeleteOutlined />}
-                  onClick={() => handleDeleteItem(index)}
+                  onClick={() => handleDeleteItem(item._id)}
                 >
                   Delete
                 </Button>

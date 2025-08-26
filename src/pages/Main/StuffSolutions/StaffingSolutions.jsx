@@ -41,7 +41,7 @@ export default function StaffingSolutions({ type }) {
           <p className="text-primary text-xl font-semibold">
             {stuff?.pageTitle}
           </p>
-          <p className="pb-6 text-wrap">{stuff?.mateDescription}</p>
+          <p className="pb-6 w-[40%]">{stuff?.mateDescription}</p>
         </div>
 
         <br />

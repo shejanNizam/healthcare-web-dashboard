@@ -14,6 +14,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   useAddStuffMutation,
   useGetSingleStuffQuery,
+  useGetStuffQuery,
   useUpdateStuffMutation,
 } from "../../../redux/features/stuff/stuffApi";
 import { useGetValueQuery } from "../../../redux/features/value/valueApi";
@@ -38,6 +39,12 @@ export default function AddEditForm() {
 
   const { data: categoryV } = useGetValueQuery("Category");
   const categoryValue = categoryV?.data;
+
+  const { data } = useGetStuffQuery();
+  const stuff = data?.data?.find((item) => item.type === type);
+  const faqs = stuff?.FAQ;
+  const whatWeDoItems = stuff?.what_we_do;
+  console.log(stuff?.FAQ);
 
   // Fetch existing data when in edit mode
   const {
@@ -282,13 +289,13 @@ export default function AddEditForm() {
                 {/* whatWeDo section - conditionally rendered based on type */}
                 {type === "workforce_solutions" && (
                   <>
-                    <WhatWeDo form={form} />
+                    <WhatWeDo form={form} whatWeDoItems={whatWeDoItems} />
                     <br />
                   </>
                 )}
 
                 {/* faq section */}
-                <Faq form={form} />
+                <Faq form={form} faqs={faqs} />
                 <br />
 
                 <Form.Item
@@ -356,6 +363,8 @@ export default function AddEditForm() {
                   <TextArea
                     rows={5}
                     placeholder="Enter meta description for search engines"
+                    maxLength={160}
+                    showCount
                   />
                 </Form.Item>
 
