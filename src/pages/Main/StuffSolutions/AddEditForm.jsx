@@ -44,7 +44,7 @@ export default function AddEditForm() {
   const stuff = data?.data?.find((item) => item.type === type);
 
   const whatWeDoItems = stuff?.what_we_do;
-  console.log(stuff?.FAQ);
+  console.log(stuff);
 
   // Fetch existing data when in edit mode
   const {
@@ -289,7 +289,7 @@ export default function AddEditForm() {
                 {/* whatWeDo section - conditionally rendered based on type */}
                 {type === "workforce_solutions" && (
                   <>
-                    <WhatWeDo form={form} whatWeDoItems={whatWeDoItems} />
+                    <WhatWeDo form={form} stuff={stuff} />
                     <br />
                   </>
                 )}

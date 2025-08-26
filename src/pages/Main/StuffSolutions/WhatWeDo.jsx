@@ -3,12 +3,20 @@ import { Button, Form, Modal } from "antd";
 import { useState } from "react";
 
 import { Input, message } from "antd";
+import {
+  useAddWhatWeDoMutation,
+  useDeleteWhatWeDoMutation,
+} from "../../../redux/features/stuff/stuffApi";
 
-const { TextArea } = Input;
-
-export default function WhatWeDo({ whatWeDoItems }) {
+export default function WhatWeDo({ stuff }) {
   const [whatWeDoForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const whatWeDoItems = stuff?.what_we_do;
+  console.log(whatWeDoItems);
+
+  const [addWhatWeDo] = useAddWhatWeDoMutation();
+  const [deleteWhatWeDo] = useDeleteWhatWeDoMutation();
 
   // const [whatWeDoItems, setWhatWeDoItems] = useState([
   //   "Manage service",
@@ -21,28 +29,45 @@ export default function WhatWeDo({ whatWeDoItems }) {
     whatWeDoForm.resetFields();
   };
 
-  const handleDeleteItem = (id) => {
+  const handleDeleteItem = async (id) => {
     Modal.confirm({
-      title: "Delete Item",
-      content: "Are you sure you want to delete this item?",
+      title: "Delete type",
+      content: "Are you sure you want to delete this type?",
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
-      onOk() {
-        console.log(id);
-        // setWhatWeDoItems(whatWeDoItems.filter((_, i) => i !== index));
-        message.success("Item deleted successfully");
+      onOk: async () => {
+        try {
+          const payload = {
+            stuffId: stuff._id,
+            doId: id,
+          };
+          await deleteWhatWeDo(payload).unwrap();
+          message.success("Type deleted successfully");
+        } catch (error) {
+          message.error(
+            error.data?.message || "Failed to delete. Please try again."
+          );
+        }
       },
     });
   };
 
-  const handleModalSubmit = (values) => {
-    if (values.text) {
-      // setWhatWeDoItems([...whatWeDoItems, values.text]);
-      message.success("Item added successfully");
+  const handleModalSubmit = async (values) => {
+    try {
+      const payload = {
+        stuffId: stuff?._id,
+        param: true,
+        body: values,
+      };
+      await addWhatWeDo(payload).unwrap();
+      setIsModalVisible(false);
+      message.success("What we do type added!");
+    } catch (error) {
+      message.error(
+        error.data?.message || "Failed to Add WhatWeDo. Please try again!"
+      );
     }
-    setIsModalVisible(false);
-    whatWeDoForm.resetFields();
   };
 
   const handleModalCancel = () => {
@@ -111,11 +136,11 @@ export default function WhatWeDo({ whatWeDoItems }) {
           onFinish={handleModalSubmit}
         >
           <Form.Item
-            name="text"
-            label="Text"
+            name="type"
+            label="Type"
             rules={[{ required: true, message: "Please enter the text" }]}
           >
-            <Input placeholder="Enter text" size="large" />
+            <Input placeholder="Enter type" size="large" />
           </Form.Item>
 
           {/* Submit Button */}

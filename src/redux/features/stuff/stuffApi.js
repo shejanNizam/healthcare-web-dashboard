@@ -59,6 +59,27 @@ export const stuffApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["stuff"],
     }),
+
+    //  add what_we_do
+    addWhatWeDo: builder.mutation({
+      query: ({ stuffId, param, body }) => {
+        return {
+          url: `/staffing/what_we_do/${stuffId}?add=${param}`,
+          method: `PATCH`,
+          body,
+        };
+      },
+      invalidatesTags: ["stuff"],
+    }),
+
+    // delete what_we_do
+    deleteWhatWeDo: builder.mutation({
+      query: ({ stuffId, doId }) => ({
+        url: `/staffing/what_we_do/${stuffId}?pull=${doId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["stuff"],
+    }),
   }),
 });
 
@@ -67,8 +88,10 @@ export const {
   useGetSingleStuffQuery,
   useAddStuffMutation,
   useUpdateStuffMutation,
-  //   faq
+  // faq
   useAddFaqMutation,
   useDeleteFaqMutation,
-  //   what we do
+  // what we do
+  useAddWhatWeDoMutation,
+  useDeleteWhatWeDoMutation,
 } = stuffApi;
