@@ -43,9 +43,6 @@ export default function AddEditForm() {
   const { data } = useGetStuffQuery();
   const stuff = data?.data?.find((item) => item.type === type);
 
-  const whatWeDoItems = stuff?.what_we_do;
-  console.log(stuff);
-
   // Fetch existing data when in edit mode
   const {
     data: existingData,
@@ -262,6 +259,8 @@ export default function AddEditForm() {
                     <TextArea
                       rows={6}
                       placeholder="Enter detailed description"
+                      maxLength={600}
+                      showCount
                     />
                   </Form.Item>
                 </div>
@@ -279,8 +278,10 @@ export default function AddEditForm() {
                   ]}
                 >
                   <TextArea
-                    rows={4}
+                    rows={6}
                     placeholder="Explain why customers should choose your service"
+                    maxLength={600}
+                    showCount
                   />
                 </Form.Item>
 
