@@ -20,9 +20,9 @@ export default function StaffingSolutions({ type }) {
           +Create
         </button>
       </div>
-      <h3 className="text-center font-bold text-purple-500">
+      {/* <h3 className="text-center font-bold text-purple-500">
         StaffingSolutions {"============>"} {type}
-      </h3>
+      </h3> */}
       <div className="border rounded-sm shadow-sm p-4 m-4">
         <div className="px-20">
           <h1 className="text-2xl font-bold pb-2">Search Engine Listing</h1>
