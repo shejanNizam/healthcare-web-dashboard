@@ -19,7 +19,7 @@ export default function TabbedViewStaff() {
       </div> */}
       <Tabs defaultActiveKey="1" centered>
         <TabPane
-          tab={<span className="font-bold text-xl">Staffing Solutions</span>}
+          tab={<span className="font-bold text-xl">Stuffing Solutions</span>}
           key="1"
         >
           <StaffingSolutions type="statting_solutions" />
