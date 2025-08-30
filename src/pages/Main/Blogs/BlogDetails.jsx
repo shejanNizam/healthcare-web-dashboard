@@ -57,7 +57,7 @@ export default function BlogDetails() {
       <h3 className="text-primary text-2xl font-semibold mb-4">{blogTitle}</h3>
 
       <p
-        className="mb-6 text-base"
+        className="no-tailwind mb-6 text-base"
         dangerouslySetInnerHTML={{ __html: description }}
       />
     </div>
